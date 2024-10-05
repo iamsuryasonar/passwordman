@@ -48,8 +48,7 @@ const useAuthState = create<AuthState>(
                     }
 
                     const data = await response.json();
-                    console.log(data)
-                    set({ user: data.user, isLoggedIn: true, isLoading: false });
+                    set({ user: data.data, isLoggedIn: true, isLoading: false });
                 } catch (error: any) {
                     set({ error: error.message, isLoggedIn: false, isLoading: false });
                 }
@@ -69,7 +68,6 @@ const useAuthState = create<AuthState>(
                     }
 
                     const data = await response.json();
-                    console.log(data)
                     set({ user: data.user, isLoggedIn: true, isLoading: false });
                 } catch (error: any) {
                     set({ error: error.message, isLoggedIn: false, isLoading: false });
@@ -78,8 +76,7 @@ const useAuthState = create<AuthState>(
             logout: () => set({ user: null, isLoggedIn: false, error: null }),
         }),
         {
-            name: 'auth-storage', // Unique name for localStorage (or sessionStorage) key
-            getStorage: () => localStorage, // (Optional) Specify storage type (localStorage by default)
+            name: 'passman-auth-storage', // Unique name for localStorage key
         }
     )
 );
