@@ -1,8 +1,14 @@
+import useAuthState from "../../stores/useAuthState";
+
 function HeroPage() {
+
     return <>
-    <p>
-            HeroPage
-        </p></>
+        <div className="flex flex-col">
+            <p>
+                HeroPage
+            </p>
+        </div>
+    </>
 }
 
 export default HeroPage;

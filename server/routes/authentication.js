@@ -26,6 +26,7 @@ router.post('/register', async (req, res) => {
         email: req.body.email,
         password: hashedPassword
     })
+
     try {
         const savedUser = await user.save();
         return res.status(201).json({ success: true, message: 'User registered successfully', data: null });
@@ -36,12 +37,13 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+    console.log(req.body)
     if (!req.body.email) return res.status(400).json({ success: false, message: 'email required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
 
     try {
         // validate the data before saving to database
-        const error  = loginUserValidation(req.body)
+        const error = loginUserValidation(req.body)
         if (error?.message) return res.status(400).json({ success: false, message: error.message, data: null });
         // check if email exists in the database and get the user's password(data) so that we can compare hashes
         const user = await User.findOne({ email: req.body.email })
@@ -53,10 +55,12 @@ router.post('/login', async (req, res) => {
         // create token using jsonwebtoken library
         const token = jwt.sign({ _id: user._id, username: user.name }, process.env.TOKEN_SECRET)
         const userData = await User.findOne({ email: req.body.email })
+
         const userinfo = {
             'name': userData.name,
             'email': userData.email,
         }
+
         const response = { ...userinfo, token }
         return res.status(200).json({ success: true, message: 'User logged in successfully', data: response });
     } catch (error) {

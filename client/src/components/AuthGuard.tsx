@@ -1,20 +1,25 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import useAuthState from "../stores/useAuthState";
 
-interface Props{
+interface Props {
     children: JSX.Element;
 }
 
 export function PrivateRoute(props: Props) {
-    const {children} = props;
-    const logged_in = false;
+    const { user, login, isLoggedIn, isLoading, error } = useAuthState();
+
+    const { children } = props;
+    const logged_in = isLoggedIn;
 
     return logged_in ? <>{children}</> : <Navigate to="/login" />;
 }
 
 export const PublicRoute = (props: Props) => {
-    const {children} = props;
-    const logged_in = false;
-    
-    return logged_in ? <Navigate to="/home" /> : <>{children}</>;
+    const { user, login, isLoggedIn, isLoading, error } = useAuthState();
+
+    const { children } = props;
+    const logged_in = isLoggedIn;
+
+    return !logged_in ? <>{children}</> : <Navigate to="/home" />;
 };
