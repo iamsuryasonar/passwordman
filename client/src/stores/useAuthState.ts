@@ -54,14 +54,14 @@ const useAuthState = create<AuthState>(
                     set({ error: error.message, isLoggedIn: false, isLoading: false });
                 }
             },
-            register: async (name, email, password) => {
+            register: async (email, password, masterKey) => {
                 set({ isLoading: true, error: null });
 
                 try {
                     const response = await fetch(BASE_URL + 'register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, email, password }),
+                        body: JSON.stringify({ email, password, masterKey }),
                     });
 
                     if (!response.ok) {

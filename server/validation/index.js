@@ -6,9 +6,7 @@ function validateEmail(email) {
 function registerUserValidation(user) {
     let error = {}
 
-    if (user.name.length < 6 || user.name.length > 255) {
-        error.message = 'Name must be 6 - 255 characters long';
-    } else if (user.email.length < 6 || user.email.length > 255) {
+    if (user.email.length < 6 || user.email.length > 255) {
         if (!validateEmail(user.email)) {
             error.message = 'Invalid email';
             return error;

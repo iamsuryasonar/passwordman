@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 let cors = require('cors')
 app.use(cors())
 const authRoute = require('./routes/authentication.js')
-
+const passRoute = require('./routes/password.js')
 // Mongoose options
 const mongooseOptions = {
     useNewUrlParser: true,
@@ -41,6 +41,8 @@ app.use(express.json())
 // route middleware
 // it adds /api/auth to the route
 app.use('/api/auth', authRoute)
+app.use('/api/password', passRoute)
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

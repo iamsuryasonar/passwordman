@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken')
 const utils = require('../utility')
 
 router.post('/register', async (req, res) => {
-    if (!req.body.name) return res.status(400).json({ success: false, message: 'name required!!!' });
     if (!req.body.email) return res.status(400).json({ success: false, message: 'email required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
+    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
 
     //validate the data before saving to database
     const error = registerUserValidation(req.body)
@@ -22,9 +22,9 @@ router.post('/register', async (req, res) => {
     const hashedPassword = bcrypt.hashSync(req.body.password, 10)
 
     const user = new User({
-        name: req.body.name,
         email: req.body.email,
-        password: hashedPassword
+        password: hashedPassword,
+        masterKey: req.body.masterKey,
     })
 
     try {
@@ -57,7 +57,6 @@ router.post('/login', async (req, res) => {
         const userData = await User.findOne({ email: req.body.email })
 
         const userinfo = {
-            'name': userData.name,
             'email': userData.email,
         }
 
