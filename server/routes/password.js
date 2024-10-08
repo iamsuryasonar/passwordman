@@ -7,6 +7,7 @@ const utils = require('../utility');
 router.post('/store-password', verify, async (req, res) => {
     if (!req.body.service) return res.status(400).json({ success: false, message: 'service required!!!' });
     if (!req.body.username) return res.status(400).json({ success: false, message: 'username required!!!' });
+    if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
 
     /* 
         if random password generation option is provided in request body then generate random password
@@ -16,9 +17,8 @@ router.post('/store-password', verify, async (req, res) => {
     const passwordExist = await Password.findOne({ service: req.body.service, username: req.body.username });
     if (passwordExist) return res.status(400).json({ success: false, message: 'Password for this service already exists', data: null });
 
-    if (req.body.password) {
-        const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
-    }
+    const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
+
 
     const password = new Password({
         user: req.user._id,
@@ -48,15 +48,19 @@ router.get('/get-passwords', verify, async (req, res) => {
     }
 })
 
-router.get('/get-password/:id', verify, async (req, res) => {
+router.post('/get-password/:id', verify, async (req, res) => {
 
     try {
         const passwordInfo = await Password.findById({ user: req.user, _id: req.params.id });
 
         if (!passwordInfo) return res.status(400).json({ success: false, message: 'Password info does not exists', data: null });
+        console.log(passwordInfo)
 
-        const decryptedPassword = utils.decryptPassword(passwordInfo.password, req.user.masterKey);
+        const decryptedPassword = utils.decryptPassword(passwordInfo.password, req.body.masterKey);
+
         passwordInfo.password = decryptedPassword;
+
+        console.log(passwordInfo);
 
         return res.status(201).json({ success: true, message: 'Password retrieved successfully', data: passwordInfo });
     } catch (error) {
