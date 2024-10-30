@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 import useAuthState from "../stores/useAuthState";
 
@@ -10,16 +9,14 @@ export function PrivateRoute(props: Props) {
     const { user, login, isLoggedIn, isLoading, error } = useAuthState();
 
     const { children } = props;
-    const logged_in = isLoggedIn;
 
-    return logged_in ? <>{children}</> : <Navigate to="/login" />;
+    return isLoggedIn ? <>{children}</> : <Navigate to="/login" />;
 }
 
 export const PublicRoute = (props: Props) => {
     const { user, login, isLoggedIn, isLoading, error } = useAuthState();
 
     const { children } = props;
-    const logged_in = isLoggedIn;
 
-    return !logged_in ? <>{children}</> : <Navigate to="/home" />;
+    return !isLoggedIn ? <>{children}</> : <Navigate to="/home" />;
 };

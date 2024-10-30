@@ -12,7 +12,6 @@ import LogInPage from './pages/login_page/LogInPage';
 import RegisterPage from './pages/register_page/RegisterPage';
 import HomePage from './pages/home_page/HomePage';
 import AddPasswordPage from './pages/add_password_page/AddPasswordPage';
-import ViewAndEditPasswordPage from './pages/view_and_edit_password_page.tsx/ViewAndEditPasswordPage';
 import ProfilePage from './pages/profile_page/ProfilePage';
 
 const centerStyle = {
@@ -85,16 +84,6 @@ function App() {
               <PrivateRoute>
                 <Suspense fallback={<div style={centerStyle}><FontAwesomeIcon icon={faSpinner} spinPulse /></div>}>
                   <AddPasswordPage />
-                </Suspense>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/view-password"
-            element={
-              <PrivateRoute>
-                <Suspense fallback={<div style={centerStyle}><FontAwesomeIcon icon={faSpinner} spinPulse /></div>}>
-                  <ViewAndEditPasswordPage />
                 </Suspense>
               </PrivateRoute>
             }
