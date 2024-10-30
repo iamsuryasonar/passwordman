@@ -4,7 +4,6 @@ import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
 
 const BASE_URL = 'http://localhost:3001/api/password/'
 
-
 interface Props {
     setShowMasterKeyModal: (arg0: boolean) => void;
     password: any;

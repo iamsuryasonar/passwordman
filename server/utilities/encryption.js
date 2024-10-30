@@ -68,43 +68,43 @@ const decrypt = (encryptedData, dek) => {
     return decryptData(data, dek, iv);
 };
 
-const data = "Old password";
-const masterKey = crypto.randomBytes(KEY_LENGTH);
+// const data = "Old password";
+// const masterKey = crypto.randomBytes(KEY_LENGTH);
 
 
-const dek = crypto.randomBytes(KEY_LENGTH);
-const encryptedDEK = encryptDEK(dek, masterKey);
-// store encryptedDEK in DB;
+// const dek = crypto.randomBytes(KEY_LENGTH);
+// const encryptedDEK = encryptDEK(dek, masterKey);
+// // store encryptedDEK in DB;
 
-// to add password, retrieve stored encryptedDEK from DB
-// get master key and password(i.e the data to be stored) from user 
+// // to add password, retrieve stored encryptedDEK from DB
+// // get master key and password(i.e the data to be stored) from user 
 
-const dek_to_encrypt = decryptDEK(encryptedDEK, masterKey); // Decrypt the DEK
-// if not decrypted then throw error. (invalid master key)
-const encryptedData = encrypt(data, dek_to_encrypt);
+// const dek_to_encrypt = decryptDEK(encryptedDEK, masterKey); // Decrypt the DEK
+// // if not decrypted then throw error. (invalid master key)
+// const encryptedData = encrypt(data, dek_to_encrypt);
 
-console.log("Encrypted Data:", encryptedData);
+// console.log("Encrypted Data:", encryptedData);
 
 
-// get stored encryptedDEK, get encryptedData from password model in db 
-// and  master key from body
-const decryptedDEK = decryptDEK(encryptedDEK, masterKey); // Decrypt the DEK
-console.log(decryptedDEK);
-const decryptedData = decrypt(encryptedData, decryptedDEK);
+// // get stored encryptedDEK, get encryptedData from password model in db 
+// // and  master key from body
+// const decryptedDEK = decryptDEK(encryptedDEK, masterKey); // Decrypt the DEK
+// console.log(decryptedDEK);
+// const decryptedData = decrypt(encryptedData, decryptedDEK);
 
-console.log("Decrypted Data:", decryptedData);
+// console.log("Decrypted Data:", decryptedData);
 
-const newMasterKey = crypto.randomBytes(KEY_LENGTH);
+// const newMasterKey = crypto.randomBytes(KEY_LENGTH);
 
-const newEncryptedDEK = encryptDEK(decryptedDEK, newMasterKey);
-console.log('new dek', newEncryptedDEK)
+// const newEncryptedDEK = encryptDEK(decryptedDEK, newMasterKey);
+// console.log('new dek', newEncryptedDEK)
 
-const decryptedDEK2 = decryptDEK(newEncryptedDEK, newMasterKey);
-console.log(decryptedDEK2);
+// const decryptedDEK2 = decryptDEK(newEncryptedDEK, newMasterKey);
+// console.log(decryptedDEK2);
 
-const decryptedData2 = decrypt(encryptedData, decryptedDEK2);
+// const decryptedData2 = decrypt(encryptedData, decryptedDEK2);
 
-console.log("Decrypted Data:", decryptedData2);
+// console.log("Decrypted Data:", decryptedData2);
 
 
 module.exports = {

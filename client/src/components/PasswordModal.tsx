@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
 import MasterKeyModal from "./MasterKeyModal";
-
+import EditModal from './EditModal';
 
 interface Props {
     setShowPasswordModal: (arg0: boolean) => void;
@@ -23,11 +23,15 @@ function PasswordModal(props: Props) {
                 setShowPasswordModal(false);
             }}
         >
-            <FontAwesomeIcon icon={faClose} className="group-hover:text-red-600 place-self-center" />
+            <FontAwesomeIcon icon={faClose} className="group-hover:text-red-600 place-self-center cursor-pointer" />
         </div>
         <div className="p-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <p>{service}</p>
-            <p>{username}</p>
+            <div className="flex gap-2 justify-between">
+                <p>{service}</p>
+            </div>
+            <div className="flex gap-2 justify-between">
+                <p>{username}</p>
+            </div>
             {
                 password ?
                     <p>{password}</p>
@@ -37,8 +41,10 @@ function PasswordModal(props: Props) {
                         <button className="bg-green-300 px-2 py-1 rounded-md"
                             onClick={() => {
                                 setShowMasterKeyModal(true);
-                            }
-                            }>view</button>
+                            }}
+                        >
+                            Decrypt
+                        </button>
                     </div>
             }
         </div>
@@ -46,6 +52,7 @@ function PasswordModal(props: Props) {
             showMasterKeyModal &&
             <MasterKeyModal password={props.password} setPassword={setPassword} setShowMasterKeyModal={setShowMasterKeyModal} />
         }
+
     </div >
 }
 
