@@ -9,6 +9,8 @@ function AddPasswordPage() {
     const [show, setShow] = useState<boolean>(false);
     const [service, setService] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [masterKey, setMasterKey] = useState<string>('');
+
     const [username, setUsername] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -24,7 +26,7 @@ function AddPasswordPage() {
                     'Authorization': `Bearer ${token}`
                 },
 
-                body: JSON.stringify({ service, username, password }),
+                body: JSON.stringify({ service, username, password, masterKey }),
             });
 
             if (!response.ok) {
@@ -70,6 +72,24 @@ function AddPasswordPage() {
                         className="border-none bg-transparent text-lg text-gray-900 focus:outline-none"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+
+                    <button className="block" onClick={() => setShow(!show)}>
+                        <div>
+                            {show ? <FontAwesomeIcon icon={faEye} />
+                                :
+                                <FontAwesomeIcon icon={faEyeSlash} />
+                            }
+                        </div>
+                    </button>
+                </div>
+                <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-slate-800">
+                    <input
+                        type={show ? 'text' : "password"}
+                        placeholder="master key"
+                        className="border-none bg-transparent text-lg text-gray-900 focus:outline-none"
+                        value={masterKey}
+                        onChange={(e) => setMasterKey(e.target.value)}
                     />
 
                     <button className="block" onClick={() => setShow(!show)}>

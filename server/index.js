@@ -4,8 +4,11 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 let cors = require('cors')
 app.use(cors())
-const authRoute = require('./routes/authentication.js')
-const passRoute = require('./routes/password.js')
+
+const authRoute = require('./routes/authentication.js');
+const passRoute = require('./routes/password.js');
+const profileRoute = require('./routes/profile.js');
+
 // Mongoose options
 const mongooseOptions = {
     useNewUrlParser: true,
@@ -42,6 +45,7 @@ app.use(express.json())
 // it adds /api/auth to the route
 app.use('/api/auth', authRoute)
 app.use('/api/password', passRoute)
+app.use('/api/profile', profileRoute)
 
 
 app.get('/', (req, res) => {

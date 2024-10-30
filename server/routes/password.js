@@ -3,11 +3,13 @@ const { verify } = require('../middleware/verifyToken');
 const Password = require('../models/Password');
 const User = require('../models/User');
 const utils = require('../utility');
+const { decryptDEK, encrypt, decrypt } = require('../utilities/encryption');
 
 router.post('/store-password', verify, async (req, res) => {
     if (!req.body.service) return res.status(400).json({ success: false, message: 'service required!!!' });
     if (!req.body.username) return res.status(400).json({ success: false, message: 'username required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
+    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
 
     /* 
         if random password generation option is provided in request body then generate random password
@@ -17,8 +19,13 @@ router.post('/store-password', verify, async (req, res) => {
     const passwordExist = await Password.findOne({ service: req.body.service, username: req.body.username });
     if (passwordExist) return res.status(400).json({ success: false, message: 'Password for this service already exists', data: null });
 
-    const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
+    // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
+    const encryptedDEK = req.user.masterKey;
 
+    const dek_to_encrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+    // if not decrypted then throw error. (invalid master key)
+
+    const encryptedPassword = encrypt(req.body.password, dek_to_encrypt);
 
     const password = new Password({
         user: req.user._id,
@@ -50,17 +57,23 @@ router.get('/get-passwords', verify, async (req, res) => {
 
 router.post('/get-password/:id', verify, async (req, res) => {
 
+    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+    const encryptedDEK = req.user.masterKey;
+
+    const dek_to_decrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+    // if not decrypted then throw error. (invalid master key)
+
     try {
+
         const passwordInfo = await Password.findById({ user: req.user, _id: req.params.id });
 
         if (!passwordInfo) return res.status(400).json({ success: false, message: 'Password info does not exists', data: null });
-        console.log(passwordInfo)
 
-        const decryptedPassword = utils.decryptPassword(passwordInfo.password, req.body.masterKey);
+        // const decryptedPassword = utils.decryptPassword(passwordInfo.password, req.body.masterKey);
+
+        const decryptedPassword = decrypt(passwordInfo.password, dek_to_decrypt);
 
         passwordInfo.password = decryptedPassword;
-
-        console.log(passwordInfo);
 
         return res.status(201).json({ success: true, message: 'Password retrieved successfully', data: passwordInfo });
     } catch (error) {
@@ -71,10 +84,20 @@ router.post('/get-password/:id', verify, async (req, res) => {
 
 router.put('/update-password/:id', verify, async (req, res) => {
 
+    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+
     try {
         let encryptedPassword;
         if (req.body.password) {
-            encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterKey);
+
+            const encryptedDEK = req.user.masterKey;
+
+            const dek_to_encrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+            // if not decrypted then throw error. (invalid master key)
+
+            encryptedPassword = encrypt(req.body.password, dek_to_encrypt);
+
+            // encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterKey);
         }
 
         const passwordInfo = await Password.findById({ user: req.user, _id: req.params.id });

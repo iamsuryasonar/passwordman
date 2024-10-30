@@ -7,13 +7,13 @@ const BASE_URL = 'http://localhost:3001/api/password/'
 
 interface Props {
     id: string;
-    setShowMasterPasswordModal: (arg0: boolean) => void;
+    setShowmasterKeyModal: (arg0: boolean) => void;
 }
 
-function MasterPasswordModal(props: Props) {
+function masterKeyModal(props: Props) {
 
     const [show, setShow] = useState<boolean>(false);
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterKey, setmasterKey] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
@@ -57,7 +57,7 @@ function MasterPasswordModal(props: Props) {
         <div className="w-full flex flex-row justify-between">
             <p className="text-2xl">Enter Master Password</p>
             <div className="group w-8 aspect-square bg-green-400 rounded-full grid cursor-pointer"
-                onClick={() => props.setShowMasterPasswordModal(false)}>
+                onClick={() => props.setShowmasterKeyModal(false)}>
                 <FontAwesomeIcon icon={faClose} className="group-hover:text-red-500 place-self-center" />
             </div>
         </div>
@@ -68,7 +68,7 @@ function MasterPasswordModal(props: Props) {
                 placeholder="password"
                 className="border-none bg-transparent text-lg text-gray-900 focus:outline-none"
                 value={masterKey}
-                onChange={(e) => setMasterKey(e.target.value)}
+                onChange={(e) => setmasterKey(e.target.value)}
             />
 
             <button className="block" onClick={() => setShow(!show)}>
@@ -89,4 +89,4 @@ function MasterPasswordModal(props: Props) {
 
 }
 
-export default MasterPasswordModal;
+export default masterKeyModal;

@@ -2,12 +2,13 @@ import usePasswordsState from "../../stores/usePasswordsState";
 import useAuthState from "../../stores/useAuthState";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MasterPasswordModal from "../../components/MasterPasswordModal";
+import PasswordModal from "../../components/PasswordModal";
 
 function HomePage() {
     const { passwords, errorMessage, getPasswords } = usePasswordsState();
     const { user, login, logout, isLoggedIn, isLoading, } = useAuthState();
-    const [showMasterPasswordModal, setShowMasterPasswordModal] = useState<boolean>(false);
+    const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
+    const [selectedPassword, setSelectedPassword] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -30,21 +31,24 @@ function HomePage() {
             }} className="bg-green-400 px-2 py-1 m-2">Add password</button>
             <p>List of passwords</p>
             {
-                passwords && passwords.map((password) => {
+                passwords && passwords.map((password, index) => {
                     return <div
                         className="bg-slate-200 p-2 m-2 rounded-md pointer-cursor"
                         key={password._id}
-                        onClick={() => setShowMasterPasswordModal(true)}
+                        onClick={() => {
+                            setShowPasswordModal(true);
+                            setSelectedPassword(index);
+                        }}
                     >
                         <p className="cursor-pointer">
                             {password.service}
                         </p>
-                        {showMasterPasswordModal && <MasterPasswordModal
-                            id={password._id}
-                            setShowMasterPasswordModal={setShowMasterPasswordModal}
-                        />}
                     </div>
                 })
+            }
+            {
+                showPasswordModal && passwords &&
+                <PasswordModal password={passwords[selectedPassword]} setShowPasswordModal={setShowPasswordModal} />
             }
 
         </div>
