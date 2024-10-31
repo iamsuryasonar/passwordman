@@ -50,19 +50,19 @@ function EditPasswordModal(props: Props) {
     };
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90 text-white flex justify-center items-center ">
-        <div>
+        <div className="p-3">
             <div className="absolute z-50 right-0 top-0 group w-10 aspect-square bg-red-300 grid cursor-pointer place-content-center"
                 onClick={() => props.setShowEditModal(false)}>
                 <FontAwesomeIcon icon={faClose} className="group-hover:text-red-600" />
             </div>
-            <div className="z-50 bg-gray-900 w-full m-6 p-6 flex flex-col justify-center gap-4 border border-gray-700 rounded-md ">
+            <div className="z-50 bg-gray-900 w-full p-6 flex flex-col justify-center gap-4 border border-gray-700 rounded-md ">
                 <p className="text-2xl">Edit Password</p>
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
                         <input
                             type='text'
                             placeholder="Website"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={service}
                             onChange={(e) => setService(e.target.value)} />
                     </div>
@@ -70,7 +70,7 @@ function EditPasswordModal(props: Props) {
                         <input
                             type='text'
                             placeholder="username"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)} />
                     </div>
@@ -78,7 +78,7 @@ function EditPasswordModal(props: Props) {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="Enter new password"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -95,7 +95,7 @@ function EditPasswordModal(props: Props) {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="Enter Master Password"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={masterKey}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />

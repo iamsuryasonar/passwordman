@@ -46,7 +46,7 @@ function AddPasswordPage() {
     };
 
     return <>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+        <div className="absolute inset-0 p-3  flex flex-col items-center justify-center text-white">
             <div className="border-2 border-gray-700 rounded-md p-4">
                 <div className="flex flex-col gap-2">
                     <p className="text-2xl">Add Password</p>
@@ -54,7 +54,7 @@ function AddPasswordPage() {
                         <input
                             type='text'
                             placeholder="Website"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={service}
                             onChange={(e) => setService(e.target.value)} />
                     </div>
@@ -62,7 +62,7 @@ function AddPasswordPage() {
                         <input
                             type='text'
                             placeholder="username"
-                            className="border-none bg-transparent text-lg  focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg  focus:outline-none"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)} />
                     </div>
@@ -70,7 +70,7 @@ function AddPasswordPage() {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="password"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -88,7 +88,7 @@ function AddPasswordPage() {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="master key"
-                            className="border-none bg-transparent text-lg focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={masterKey}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />

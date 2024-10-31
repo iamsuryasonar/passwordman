@@ -27,29 +27,29 @@ function HomePage() {
     }, [])
 
     return <div className="w-full flex relative gap-2 text-white">
-        <aside className="fixed top-0 bottom-0 w-[200px] min-h-screen p-3 flex flex-col gap-2">
+        <aside className="fixed top-[60px] bottom-0 w-[60px] sm:w-[200px] min-h-screen px-3 flex flex-col items-center sm:items-stretch gap-2">
             <div className="flex gap-2 cursor-pointer p-2 border border-1 border-gray-700 hover:border-white rounded-md">
                 <FontAwesomeIcon icon={faVault} className="w-6 place-self-center cursor-pointer text-purple-500" />
-                <p>All</p>
+                <p className="hidden sm:block">All</p>
             </div>
             <div className="flex gap-2 cursor-pointer p-2 border border-1 border-gray-700 hover:border-white rounded-md">
                 <FontAwesomeIcon icon={faBookmark} className="w-6 place-self-center cursor-pointer text-green-400" />
-                <p>Bookmarked</p>
+                <p className="hidden sm:block">Bookmarked</p>
             </div>
             <div className="flex gap-2 cursor-pointer p-2 border border-1 border-gray-700 hover:border-white rounded-md">
                 <FontAwesomeIcon icon={faTrash} className="w-6 place-self-center cursor-pointer text-red-500" />
-                <p>Trash</p>
+                <p className="hidden sm:block">Trash</p>
             </div>
         </aside>
 
-        <div className="relative ml-[210px] w-full p-2 rounded-md flex flex-col border border-1 border-gray-700">
+        <div className="relative sm:ml-[210px] ml-[60px] mr-3 mb-3 w-full p-2 rounded-md flex flex-col border border-1 border-gray-700">
             <div className="p-2 mb-4 flex gap-2 justify-between">
                 <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <input
                         type='text'
                         placeholder="Search"
-                        className="border-none bg-transparent text-lg focus:outline-none"
+                        className="w-full border-none bg-transparent text-lg focus:outline-none"
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                     />
