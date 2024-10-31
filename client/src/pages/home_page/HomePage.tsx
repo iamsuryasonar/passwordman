@@ -7,19 +7,61 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faBookmark, faAdd, faMagnifyingGlass, faVault, faTrash, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import MasterKeyModal from "../../components/MasterKeyModal";
 
+const BASE_URL = 'http://localhost:3001/api/password/'
+
 function HomePage() {
     const { passwords, errorMessage, getPasswords } = usePasswordsState();
-    const { user, login, logout, isLoggedIn, isLoading } = useAuthState();
+    const { user, login, logout, isLoggedIn } = useAuthState();
     const [selectedPassword, setSelectedPassword] = useState<number | null>(null);
     const [showEditModal, setShowEditModal] = useState<boolean>(false)
     const [showMasterKeyModal, setShowMasterKeyModal] = useState<boolean>(false);
     const [decryptedPassword, setDecryptedPassword] = useState<any | null>(null);
     const [searchText, setSearchText] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     async function handleLogout() {
         await logout();
+    }
+
+    async function updateBookmarkStatus(bookmarkStatus: boolean, id: string) {
+        let path;
+        if (bookmarkStatus === false) {
+            // bookmark
+            path = 'bookmark-password/';
+        } else {
+            // unmark
+            path = 'undo-bookmark-password/';
+        }
+
+        try {
+            setIsLoading(true)
+            const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+            const response = await fetch(BASE_URL + path + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                setIsLoading(false)
+                throw new Error('Could not fetch passwords');
+            }
+
+            const res = await response.json();
+            console.log(res)
+            return res.data;
+        } catch (error: any) {
+            setIsLoading(false)
+            return null;
+        }
+    }
+
+    async function bookmarkHandler(bookmarkStatus: boolean, id: string) {
+        await updateBookmarkStatus(bookmarkStatus, id);
     }
 
     useEffect(() => {
@@ -33,7 +75,7 @@ function HomePage() {
                 <p className="hidden sm:block">All</p>
             </div>
             <div className="flex gap-2 cursor-pointer p-2 border border-1 border-gray-700 hover:border-white rounded-md">
-                <FontAwesomeIcon icon={faBookmark} className="w-6 place-self-center cursor-pointer text-green-400" />
+                <FontAwesomeIcon icon={faBookmark} className="w-6 place-self-center cursor-pointer text-yellow-400" />
                 <p className="hidden sm:block">Bookmarked</p>
             </div>
             <div className="flex gap-2 cursor-pointer p-2 border border-1 border-gray-700 hover:border-white rounded-md">
@@ -99,7 +141,23 @@ function HomePage() {
                             selectedPassword === index &&
                             <div className="border border-gray-700 rounded-md">
                                 <div className="border-b-2 border-gray-700 flex justify-between p-2">
-                                    <FontAwesomeIcon icon={faBookmark} className="place-self-center cursor-pointer" />
+
+                                    {
+                                        (passwords[selectedPassword].bookmarked === true) ?
+                                            <FontAwesomeIcon icon={faBookmark} className="place-self-center cursor-pointer text-yellow-400"
+                                                onClick={() => {
+                                                    bookmarkHandler(passwords[selectedPassword].bookmarked, passwords[selectedPassword]._id);
+                                                }} />
+                                            :
+                                            <FontAwesomeIcon icon={faBookmark} className="place-self-center cursor-pointer text-white"
+                                                onClick={() => {
+                                                    bookmarkHandler(passwords[selectedPassword].bookmarked, passwords[selectedPassword]._id);
+                                                }} />
+
+
+                                    }
+
+
                                     <button className="border border-gray-700 hover:border-white rounded-md px-4 py-1"
                                         onClick={() => {
                                             setShowEditModal(true);

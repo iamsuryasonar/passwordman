@@ -172,7 +172,7 @@ router.put('/undo-bookmark-password/:id', verify, async (req, res) => {
         const updatedPassword = await Password.findByIdAndUpdate(
             { _id: req.params.id, user: req.user._id },
             {
-                bookmark: false,
+                bookmarked: false,
             },
         );
 
