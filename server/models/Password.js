@@ -23,6 +23,16 @@ const passwordSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
         maxlength: 500,
+    },
+    deleted: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    bookmarked: {
+        type: Boolean,
+        required: true,
+        default: false,
     }
 }, {
     timestamps: true,
