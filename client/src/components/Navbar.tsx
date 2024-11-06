@@ -34,16 +34,19 @@ function Navbar() {
                         {
                             showMenu &&
                             <div className="absolute p-10 flex flex-col items-center gap-4 bg-gray-800 right-0 top-[50px] z-50">
+                                <button className="border border-gray-700 rounded-md px-2 py-1 hover:border-white"
+                                    onClick={() => {
+                                        navigate('/profile');
+                                        setShowMenu(false);
+                                    }}>
+                                    Profile
+                                </button>
+
                                 <button onClick={() => {
                                     handleLogout();
                                     setShowMenu(false);
-                                }} className="border border-gray-700 rounded-md px-2 py-1">LogOut</button>
-                                <button className="border border-gray-700 rounded-md px-2 py-1"
-                                    onClick={() => {
-                                        navigate('/profile');
-                                        setShowMenu(false)
-                                    }}>
-                                    Profile
+                                }} className="border border-gray-700 rounded-md px-2 py-1 hover:border-white">
+                                    LogOut
                                 </button>
                             </div>
                         }

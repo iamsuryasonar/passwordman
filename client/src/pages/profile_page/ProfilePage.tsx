@@ -10,7 +10,7 @@ function ProfilePage() {
 
     return <div className="absolute inset-0 flex items-center justify-center text-white">
         <div className="p-6 border border-gray-700 rounded-md flex flex-col gap-2">
-            <p className="text-lg font-semibold">Profile</p>
+            <p className="text-lg font-semibold place-self-center">Profile</p>
             <p>{user?.email}</p>
             <button className="border-2 border-gray-700 hover:border-white text-white px-2 py-1 rounded-md"
                 onClick={() => setShowMasterpasswordModal(true)}>
