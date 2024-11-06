@@ -50,7 +50,6 @@ router.get('/get-passwords', verify, async (req, res) => {
 
         return res.status(201).json({ success: true, message: 'Passwords retrieved successfully', data: passwords });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
     }
 })
@@ -103,15 +102,16 @@ router.put('/update-password/:id', verify, async (req, res) => {
         const passwordInfo = await Password.findById({ user: req.user, _id: req.params.id });
 
         const updatedPassword = await Password.findByIdAndUpdate(
-            { _id: req.params.id, user: req.user._id },
+            { _id: req.params.id, user: req.user._id, deleted: false },
             {
                 service: req.body.service || passwordInfo.service,
                 username: req.body.username || passwordInfo.username,
                 password: encryptedPassword || passwordInfo.password,
             },
         );
+        const passwords = await Password.find({ user: req.user }).select('-password');
 
-        return res.status(201).json({ success: true, message: 'Password updated successfully', data: null });
+        return res.status(201).json({ success: true, message: 'Password updated successfully', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
@@ -124,17 +124,20 @@ router.put('/delete-password/:id', verify, async (req, res) => {
             { _id: req.params.id, user: req.user._id },
             {
                 deleted: true,
+                bookmarked: false,
             },
         );
 
-        return res.status(201).json({ success: true, message: 'Password deleted successfully', data: null });
+        const passwords = await Password.find({ user: req.user }).select('-password');
+
+        return res.status(201).json({ success: true, message: 'Password moved to trash successfully', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
     }
 })
 
-router.put('/undo-delete-password/:id', verify, async (req, res) => {
+router.put('/undo-deleted-password/:id', verify, async (req, res) => {
     try {
         const updatedPassword = await Password.findByIdAndUpdate(
             { _id: req.params.id, user: req.user._id },
@@ -143,7 +146,9 @@ router.put('/undo-delete-password/:id', verify, async (req, res) => {
             },
         );
 
-        return res.status(201).json({ success: true, message: 'Password unarchived successfully', data: null });
+        const passwords = await Password.find({ user: req.user }).select('-password');
+
+        return res.status(201).json({ success: true, message: 'Password unarchived successfully', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
@@ -154,13 +159,13 @@ router.put('/bookmark-password/:id', verify, async (req, res) => {
 
     try {
         const updatedPassword = await Password.findByIdAndUpdate(
-            { _id: req.params.id, user: req.user._id },
+            { _id: req.params.id, user: req.user._id, deleted: false },
             {
                 bookmarked: true,
             },
         );
-
-        return res.status(201).json({ success: true, message: 'Password bookmarked successfully', data: null });
+        const passwords = await Password.find({ user: req.user }).select('-password');
+        return res.status(201).json({ success: true, message: 'Password bookmarked successfully', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
@@ -170,13 +175,13 @@ router.put('/bookmark-password/:id', verify, async (req, res) => {
 router.put('/undo-bookmark-password/:id', verify, async (req, res) => {
     try {
         const updatedPassword = await Password.findByIdAndUpdate(
-            { _id: req.params.id, user: req.user._id },
+            { _id: req.params.id, user: req.user._id, deleted: false },
             {
                 bookmarked: false,
             },
         );
-
-        return res.status(201).json({ success: true, message: 'Password unmarked successfully', data: null });
+        const passwords = await Password.find({ user: req.user }).select('-password');
+        return res.status(201).json({ success: true, message: 'Password unmarked successfully', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });
@@ -198,9 +203,21 @@ router.get('/get-deleted-passwords', verify, async (req, res) => {
 router.get('/get-bookmarked-passwords', verify, async (req, res) => {
 
     try {
-        const passwords = await Password.find({ user: req.user, bookmarked: true }).select('-password');
+        const passwords = await Password.find({ user: req.user, bookmarked: true, deleted: false }).select('-password');
 
         return res.status(201).json({ success: true, message: 'Passwords retrieved successfully', data: passwords });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, message: 'Internal server error', data: null });
+    }
+})
+
+router.delete('/permanently-delete-password/:id', verify, async (req, res) => {
+    try {
+        let deletedPassword = await Password.deleteOne({ _id: req.params.id, user: req.user._id });
+        const passwords = await Password.find({ user: req.user }).select('-password');
+
+        return res.status(201).json({ success: true, message: 'Password deleted permanently', data: passwords });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error', data: null });

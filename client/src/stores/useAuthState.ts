@@ -1,8 +1,7 @@
 import { create, StateCreator } from 'zustand'
-
 import { persist, PersistOptions } from 'zustand/middleware'
+import { AUTH_BASE_URL } from "../constants/constants";
 
-const BASE_URL = 'http://localhost:3001/api/auth/'
 
 interface User {
     id: number;
@@ -37,7 +36,7 @@ const useAuthState = create<AuthState>(
                 set({ isLoading: true, error: null });
 
                 try {
-                    const response = await fetch(BASE_URL + 'logIn', {
+                    const response = await fetch(AUTH_BASE_URL + 'logIn', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password }),
@@ -57,7 +56,7 @@ const useAuthState = create<AuthState>(
                 set({ isLoading: true, error: null });
 
                 try {
-                    const response = await fetch(BASE_URL + 'register', {
+                    const response = await fetch(AUTH_BASE_URL + 'register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password, masterPassword }),

@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-
-const BASE_URL = 'http://localhost:3001/api/password/'
+import usePasswordsState from '../../../stores/usePasswordsState';
 
 interface Props {
     password: any;
@@ -10,43 +9,21 @@ interface Props {
     onUpdate: () => void;
 }
 
-function EditPasswordModal(props: Props) {
+function EditServiceModal(props: Props) {
+
+    const { loading, updateService } = usePasswordsState();
 
     const [show, setShow] = useState<boolean>(false);
     const [service, setService] = useState<string>(props.password.service);
     const [password, setPassword] = useState<string>(props.password.password);
     const [username, setUsername] = useState<string>(props.password.username);
     const [masterKey, setMasterKey] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleSubmit = async () => {
-        try {
-            setIsLoading(true)
-            const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
-            const response = await fetch(BASE_URL + `update-password/${props.password._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-
-                body: JSON.stringify({ service, username, password, masterKey }),
-            });
-
-            if (!response.ok) {
-                setIsLoading(false)
-                throw new Error('Failed to edit password');
-            }
-
-            const data = await response.json();
-            props.onUpdate();
-            console.log(data);
-            setIsLoading(true)
-
-        } catch (error: any) {
-            setIsLoading(true)
-            console.log(error)
-        }
+        updateService(service, username, password, masterKey, props.password._id)
+            .then(() => {
+                props.setShowEditModal(false);
+            })
     };
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90 text-white flex justify-center items-center ">
@@ -109,7 +86,7 @@ function EditPasswordModal(props: Props) {
                         </button>
                     </div>
                     <button className=" bg-green-500 rounded-md px-2 py-1 cursor-pointer"
-                        onClick={handleSubmit} disabled={isLoading}
+                        onClick={handleSubmit} disabled={loading}
                     >
                         Submit
                     </button>
@@ -120,4 +97,4 @@ function EditPasswordModal(props: Props) {
 
 }
 
-export default EditPasswordModal;
+export default EditServiceModal;

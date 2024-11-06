@@ -23,22 +23,22 @@ function LogInPage() {
     }, [])
 
     return <>
-        <div className="w-full flex flex-col items-center justify-center">
+        <div className="absolute p-3 inset-0 flex flex-col items-center justify-center text-white">
             <p className="text-2xl">log in</p>
-            <div className="bg-slate-50 flex flex-col gap-2">
-                <div className="flex items-center space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-slate-800">
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
                     <input
                         type='text'
                         placeholder="email"
-                        className="border-none bg-transparent text-lg text-gray-900 focus:outline-none"
+                        className="w-full border-none bg-transparent text-lg focus:outline-none"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)} />
                 </div>
-                <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-slate-800">
+                <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
                     <input
                         type={show ? 'text' : "password"}
                         placeholder="password"
-                        className="border-none bg-transparent text-lg text-gray-900 focus:outline-none"
+                        className="w-full border-none bg-transparent text-lg  focus:outline-none"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
