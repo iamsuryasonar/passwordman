@@ -25,6 +25,7 @@ function PasswordsSection(props: Props1) {
         setShowEditModal,
         setShowMasterKeyModal,
     } = props;
+    
     const { deletePassword, permanentlyDeletePassword, undoDeletePassword } = usePasswordsState();
 
     function deleteHandler(id: string) {
@@ -37,6 +38,15 @@ function PasswordsSection(props: Props1) {
 
     function undoDeletehandler(id: string) {
         undoDeletePassword(id);
+    }
+
+    async function copyToClipboard(text: string) {
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log('copied');
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return <>
@@ -73,7 +83,7 @@ function PasswordsSection(props: Props1) {
                         (selectedPassword === index) && (selectedPassword !== null) &&
                         <div className="border border-gray-700 rounded-md">
                             <div className="border-b-2 border-gray-700 flex justify-between p-2">
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 items-center">
                                     {
                                         (activeMenu !== 'Trash') && <>
                                             {
@@ -90,12 +100,14 @@ function PasswordsSection(props: Props1) {
                                             }
                                         </>
                                     }
+
                                     {
                                         (activeMenu === 'Trash') && <FontAwesomeIcon icon={faTrashRestore} className="place-self-center cursor-pointer text-green-500"
                                             onClick={() => {
                                                 undoDeletehandler(passwords[selectedPassword]._id);
                                             }} />
                                     }
+                                    <p className="text-gray-700">•</p>
                                     <FontAwesomeIcon icon={faTrash} className="place-self-center cursor-pointer text-red-500"
                                         onClick={() => {
                                             deleteHandler(passwords[selectedPassword]._id);
@@ -117,17 +129,29 @@ function PasswordsSection(props: Props1) {
 
                                     {
                                         (decryptedPassword !== null && service._id === decryptedPassword._id) ?
-                                            <p className="font-semibold text-lg">{decryptedPassword.password}</p>
+                                            <p className="">{decryptedPassword.password}</p>
                                             :
-                                            <p className="font-semibold text-lg">***********</p>
+                                            <p className="font-semibold text-lg text-gray-500">•••••••••••</p>
                                     }
-                                    <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
-                                        onClick={() => {
-                                            setShowMasterKeyModal(true);
-                                        }}
-                                    >
-                                        Decrypt
-                                    </button>
+                                    {
+                                        (decryptedPassword !== null && service._id === decryptedPassword._id) ?
+                                            <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
+                                                onClick={() => {
+                                                    copyToClipboard(decryptedPassword.password);
+                                                }}
+                                            >
+                                                Copy
+                                            </button>
+                                            :
+                                            <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
+                                                onClick={() => {
+                                                    setShowMasterKeyModal(true);
+                                                }}
+                                            >
+                                                Decrypt
+                                            </button>
+                                    }
+
                                 </div>
                             </div>
                         </div>

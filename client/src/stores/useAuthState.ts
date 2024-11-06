@@ -5,7 +5,6 @@ import { AUTH_BASE_URL } from "../constants/constants";
 
 interface User {
     id: number;
-    name: string;
     email: string;
 }
 

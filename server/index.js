@@ -6,7 +6,7 @@ let cors = require('cors')
 app.use(cors())
 
 const authRoute = require('./routes/authentication.js');
-const passRoute = require('./routes/password.js');
+const serviceRoute = require('./routes/service.js');
 const profileRoute = require('./routes/profile.js');
 
 // Mongoose options
@@ -44,7 +44,7 @@ app.use(express.json())
 // route middleware
 // it adds /api/auth to the route
 app.use('/api/auth', authRoute)
-app.use('/api/password', passRoute)
+app.use('/api/service', serviceRoute)
 app.use('/api/profile', profileRoute)
 
 

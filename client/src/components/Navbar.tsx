@@ -20,19 +20,15 @@ function Navbar() {
                 <nav className="z-50 sticky top-0 right-0 left-0 px-3 m-auto h-[60px] bg-gray-900 flex justify-between items-center">
                     <div className="max-w-[1240px] m-auto w-full flex justify-between items-center text-white">
                         <Link to="/home" className="text-lg font-bold">PassMan</Link>
-                        <div className="flex gap-2">
-                            <p>{user!.email}</p>
+                        <div className="flex gap-2" onClick={() => {
+                            setShowMenu(!showMenu)
+                        }}>
+                            <p className="text-gray-400 text-sm">{user!.email}</p>
                             {
                                 showMenu === false ?
-                                    <FontAwesomeIcon icon={faCaretDown} className="place-self-center cursor-pointer"
-                                        onClick={() => {
-                                            setShowMenu(true)
-                                        }} />
+                                    <FontAwesomeIcon icon={faCaretDown} className="place-self-center cursor-pointer" />
                                     :
-                                    <FontAwesomeIcon icon={faCaretUp} className="place-self-center cursor-pointer"
-                                        onClick={() => {
-                                            setShowMenu(false)
-                                        }} />
+                                    <FontAwesomeIcon icon={faCaretUp} className="place-self-center cursor-pointer" />
                             }
                         </div>
                         {

@@ -62,9 +62,11 @@ router.post('/login', async (req, res) => {
 
         const userinfo = {
             'email': userData.email,
+            'username': userData.username,
         }
 
         const response = { ...userinfo, token }
+        console.log(response)
         return res.status(200).json({ success: true, message: 'User logged in successfully', data: response });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Interal server error', data: null });

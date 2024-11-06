@@ -24,40 +24,42 @@ function LogInPage() {
 
     return <>
         <div className="absolute p-3 inset-0 flex flex-col items-center justify-center text-white">
-            <p className="text-2xl">log in</p>
             <div className="flex flex-col gap-2">
-                <div className="flex items-center space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
-                    <input
-                        type='text'
-                        placeholder="email"
-                        className="w-full border-none bg-transparent text-lg focus:outline-none"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
-                    <input
-                        type={show ? 'text' : "password"}
-                        placeholder="password"
-                        className="w-full border-none bg-transparent text-lg  focus:outline-none"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                <p className="text-2xl place-self-center">Log in</p>
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
+                        <input
+                            type='text'
+                            placeholder="email"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
+                        <input
+                            type={show ? 'text' : "password"}
+                            placeholder="password"
+                            className="w-full border-none bg-transparent text-lg  focus:outline-none"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
 
-                    <button className="block" onClick={() => setShow(!show)}>
-                        <div>
-                            {show ? <FontAwesomeIcon icon={faEye} />
-                                :
-                                <FontAwesomeIcon icon={faEyeSlash} />
-                            }
-                        </div>
+                        <button className="block" onClick={() => setShow(!show)}>
+                            <div>
+                                {show ? <FontAwesomeIcon icon={faEye} />
+                                    :
+                                    <FontAwesomeIcon icon={faEyeSlash} />
+                                }
+                            </div>
+                        </button>
+                    </div>
+                    <button className=" bg-green-500 rounded-md px-2 py-1"
+                        onClick={handleLogin} disabled={isLoading}
+                    >
+                        Log in
                     </button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </div>
-                <button className=" bg-green-500 rounded-md px-2 py-1"
-                    onClick={handleLogin} disabled={isLoading}
-                >
-                    Log in
-                </button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
         </div>
     </>

@@ -1,17 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faBookmark, faAdd, faMagnifyingGlass, faVault, faTrash, faCaretUp } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { faAdd, faClose, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 interface Props1 {
     searchText: string;
     setSearchText: (arg0: string) => void;
+    setShowAddServiceModal: (arg0: boolean) => void;
 }
 
 function SearchSection(props: Props1) {
-    const navigate = useNavigate();
-    const { searchText, setSearchText } = props;
+
+    const { searchText, setSearchText, setShowAddServiceModal } = props;
+
     return <>
-        <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700">
+        <div className="relative flex items-center justify-between gap-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700 hover:border-white">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <input
                 type='text'
@@ -20,15 +21,18 @@ function SearchSection(props: Props1) {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            {/*todo : debounce search , no need of a button to search */}
+            <div className="cursor-pointer hover:text-red-400" onClick={() => setSearchText('')}>
+                <FontAwesomeIcon icon={faClose} />
+            </div>
         </div>
         <div className="bg-purple-600 hover:bg-purple-700 rounded-md px-3 py-1 flex items-center gap-2 text-nowrap cursor-pointer"
             onClick={() => {
-                navigate('/add-password')
+                setShowAddServiceModal(true);
             }}>
             <FontAwesomeIcon icon={faAdd} />
-            <p>Add New</p>
-        </div></>
+            <p className="hidden sm:flex">Add New</p>
+        </div>
+    </>
 }
 
 export default SearchSection;

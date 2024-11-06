@@ -1,6 +1,6 @@
 import { create, StateCreator } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
-import { PASSWORD_BASE_URL } from "../constants/constants";
+import { SERVICE_BASE_URL } from "../constants/constants";
 
 function filterPasswordsToArray(passwords: any) {
     const allPasswords = passwords.filter((el: any) => el.deleted !== true);
@@ -9,7 +9,7 @@ function filterPasswordsToArray(passwords: any) {
     return { allPasswords, deletedPasswords, bookmarkedPasswords }
 }
 
-interface Password {
+interface Service {
     _id: string;
     username: string;
     service: string;
@@ -20,12 +20,13 @@ interface Password {
 }
 
 interface PasswordsState {
-    allPasswords: Password[] | null;
-    bookmarkedPasswords: Password[] | null;
-    deletedPasswords: Password[] | null;
+    allPasswords: Service[] | null;
+    bookmarkedPasswords: Service[] | null;
+    deletedPasswords: Service[] | null;
     loading: boolean;
     errorMessage: string | null;
-    getPasswords: () => Promise<void>;
+    addService: (arg0: string, arg1: string, arg3: string, arg4: string) => Promise<void>;
+    getServices: () => Promise<void>;
     updateBookmarkStatus: (arg0: string, arg1: string) => Promise<void>;
     updateService: (arg0: string, arg1: string, arg3: string, arg4: string, arg5: string) => Promise<void>;
     deletePassword: (arg0: string) => Promise<void>;
@@ -47,12 +48,43 @@ const usePasswordsState = create<PasswordsState>(
             loading: false,
             errorMessage: null,
 
-            getPasswords: async () => {
+            addService: async (service: string, username: string, password: string, masterKey: string) => {
+                try {
+                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
+                    const response = await fetch(SERVICE_BASE_URL + 'store-service', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({ service, username, password, masterKey }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to save password');
+                    }
+
+                    const data = await response.json();
+                    const { allPasswords, deletedPasswords, bookmarkedPasswords } = filterPasswordsToArray(data.data);
+
+                    set({
+                        allPasswords: allPasswords,
+                        deletedPasswords: deletedPasswords,
+                        bookmarkedPasswords: bookmarkedPasswords,
+                        loading: false
+                    });
+                } catch (error: any) {
+                    set({ errorMessage: error.message, loading: false });
+                }
+            },
+
+            getServices: async () => {
                 set({ loading: true, errorMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
-                    const response = await fetch(PASSWORD_BASE_URL + 'get-passwords', {
+                    const response = await fetch(SERVICE_BASE_URL + 'get-services', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -85,7 +117,7 @@ const usePasswordsState = create<PasswordsState>(
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
-                    const response = await fetch(PASSWORD_BASE_URL + path + id, {
+                    const response = await fetch(SERVICE_BASE_URL + path + id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -117,7 +149,7 @@ const usePasswordsState = create<PasswordsState>(
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
-                    const response = await fetch(PASSWORD_BASE_URL + `update-password/${id}`, {
+                    const response = await fetch(SERVICE_BASE_URL + `update-service/${id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -152,7 +184,7 @@ const usePasswordsState = create<PasswordsState>(
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
-                    const response = await fetch(PASSWORD_BASE_URL + 'delete-password/' + id, {
+                    const response = await fetch(SERVICE_BASE_URL + 'delete-service/' + id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -184,7 +216,7 @@ const usePasswordsState = create<PasswordsState>(
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
-                    const response = await fetch(PASSWORD_BASE_URL + 'permanently-delete-password/' + id, {
+                    const response = await fetch(SERVICE_BASE_URL + 'permanently-delete-service/' + id, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -216,7 +248,7 @@ const usePasswordsState = create<PasswordsState>(
 
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
-                    const response = await fetch(PASSWORD_BASE_URL + 'undo-deleted-password/' + id, {
+                    const response = await fetch(SERVICE_BASE_URL + 'undo-deleted-service/' + id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

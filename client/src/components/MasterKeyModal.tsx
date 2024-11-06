@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
-
-const BASE_URL = 'http://localhost:3001/api/password/'
+import { SERVICE_BASE_URL } from "../constants/constants";
 
 interface Props {
     setShowMasterKeyModal: (arg0: boolean) => void;
@@ -20,7 +19,7 @@ function MasterKeyModal(props: Props) {
         try {
             setIsLoading(true)
             const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
-            const response = await fetch(BASE_URL + 'get-password/' + id, {
+            const response = await fetch(SERVICE_BASE_URL + 'get-service/' + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,16 +49,18 @@ function MasterKeyModal(props: Props) {
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90 text-white flex justify-center items-center ">
         <div className="p-3">
-            <div className="absolute z-50 right-0 top-0 group w-10 aspect-square bg-red-300 grid cursor-pointer place-content-center"
-                onClick={() => {
-                    setShowMasterKeyModal(false);
-                }}
-            >
-                <FontAwesomeIcon icon={faClose} className="group-hover:text-red-600" />
-            </div>
-            <div className="z-50 bg-gray-900 w-full p-6 flex flex-col justify-center gap-4 border border-gray-700 rounded-md">
+
+            <div className="relative z-50 bg-gray-900 w-full p-6 flex flex-col justify-center gap-4 border border-gray-700 rounded-md">
+                <div className="absolute z-50 right-0 top-0 group w-8 aspect-square rounded-tr-md rounded-bl-md bg-red-300 grid cursor-pointer place-content-center"
+                    onClick={() => {
+                        setShowMasterKeyModal(false);
+                    }}
+                >
+                    <FontAwesomeIcon icon={faClose} className="group-hover:text-red-600" />
+                </div>
                 <div className="flex flex-col gap-2">
-                    <div className="w-full flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-slate-800">
+                    <p className="text-2xl">Decrypt password</p>
+                    <div className="w-full flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700 hover:border-white">
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="Master key"

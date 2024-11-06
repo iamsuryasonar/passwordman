@@ -11,7 +11,6 @@ import { PrivateRoute, PublicRoute } from './components/AuthGuard';
 import LogInPage from './pages/login_page/LogInPage';
 import RegisterPage from './pages/register_page/RegisterPage';
 import HomePage from './pages/home_page/HomePage';
-import AddPasswordPage from './pages/add_password_page/AddPasswordPage';
 import ProfilePage from './pages/profile_page/ProfilePage';
 
 const centerStyle = {
@@ -74,16 +73,6 @@ function App() {
               <PrivateRoute>
                 <Suspense fallback={<div style={centerStyle}><FontAwesomeIcon icon={faSpinner} spinPulse /></div>}>
                   <ProfilePage />
-                </Suspense>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/add-password"
-            element={
-              <PrivateRoute>
-                <Suspense fallback={<div style={centerStyle}><FontAwesomeIcon icon={faSpinner} spinPulse /></div>}>
-                  <AddPasswordPage />
                 </Suspense>
               </PrivateRoute>
             }
