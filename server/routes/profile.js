@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const User = require('../models/User')
-const { decryptDEK, encryptDEK } = require('../utilities/encryption')
+const { encryptDekWithMasterPassword, decryptDekWithMasterPassword } = require('../utilities/encryption')
 const { verify } = require('../middleware/verifyToken');
 
 router.put('/update-master-key', verify, async (req, res) => {
@@ -15,9 +15,9 @@ router.put('/update-master-key', verify, async (req, res) => {
             const encryptedDEK = req.user.masterKey;
             console.log('old', encryptedDEK);
 
-            const decryptedDEK = decryptDEK(encryptedDEK, req.body.masterKey);
+            const decryptedDEK = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
             // if not decrypted then throw error. (invalid master key)
-            newEncryptedDEK = encryptDEK(decryptedDEK, req.body.newMasterKey);
+            newEncryptedDEK = encryptDekWithMasterPassword(decryptedDEK, req.body.newMasterKey);
             console.log('new', newEncryptedDEK)
         }
 

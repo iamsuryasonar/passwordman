@@ -44,6 +44,7 @@ function UpdateMasterPasswordModal(props: Props) {
 
     async function handleUpdateMasterPassword() {
         await updateMasterPassword(masterKey, newMasterKey);
+        setShowMasterpasswordModal(false);
     }
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90p-3 flex flex-col items-center justify-center text-white">
@@ -62,7 +63,7 @@ function UpdateMasterPasswordModal(props: Props) {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="old master password"
-                            className="w-full border-none bg-transparent text-lg text-gray-900 focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={masterKey}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />
@@ -80,7 +81,7 @@ function UpdateMasterPasswordModal(props: Props) {
                         <input
                             type={show ? 'text' : "password"}
                             placeholder="new master password"
-                            className="w-full border-none bg-transparent text-lg text-gray-900 focus:outline-none"
+                            className="w-full border-none bg-transparent text-lg focus:outline-none"
                             value={newMasterKey}
                             onChange={(e) => setNewMasterKey(e.target.value)}
                         />

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { verify } = require('../middleware/verifyToken');
 const Service = require('../models/Service');
-const { decryptDEK, encrypt, decrypt } = require('../utilities/encryption');
+const { decryptDekWithMasterPassword, encryptPasswordWithDek, decryptPasswordWithDek } = require('../utilities/encryption');
 
 router.post('/store-service', verify, async (req, res) => {
     if (!req.body.service) return res.status(400).json({ success: false, message: 'service required!!!' });
@@ -21,10 +21,10 @@ router.post('/store-service', verify, async (req, res) => {
         // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
         const encryptedDEK = req.user.masterKey;
 
-        const dek_to_encrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+        const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
         // if not decrypted then throw error. (invalid master key)
 
-        const encryptedPassword = encrypt(req.body.password, dek_to_encrypt);
+        const encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
 
         const service = new Service({
             user: req.user._id,
@@ -60,7 +60,7 @@ router.post('/get-service/:id', verify, async (req, res) => {
     try {
         const encryptedDEK = req.user.masterKey;
 
-        const dek_to_decrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+        const dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
         // if not decrypted then throw error. (invalid master key)
 
 
@@ -70,7 +70,7 @@ router.post('/get-service/:id', verify, async (req, res) => {
 
         // const decryptedPassword = utils.decryptPassword(serviceInfo.password, req.body.masterKey);
 
-        const decryptedPassword = decrypt(serviceInfo.password, dek_to_decrypt);
+        const decryptedPassword = decryptPasswordWithDek(serviceInfo.password, dek_to_decrypt);
 
         serviceInfo.password = decryptedPassword;
 
@@ -91,10 +91,10 @@ router.put('/update-service/:id', verify, async (req, res) => {
 
             const encryptedDEK = req.user.masterKey;
 
-            const dek_to_encrypt = decryptDEK(encryptedDEK, req.body.masterKey);
+            const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
             // if not decrypted then throw error. (invalid master key)
 
-            encryptedPassword = encrypt(req.body.password, dek_to_encrypt);
+            encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
 
             // encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterKey);
         }

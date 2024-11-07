@@ -4,7 +4,7 @@ const { registerUserValidation, loginUserValidation } = require('../validation/i
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const utils = require('../utility')
-const { encryptDEK } = require('../utilities/encryption')
+const { encryptDekWithMasterPassword } = require('../utilities/encryption')
 
 router.post('/register', async (req, res) => {
     if (!req.body.email) return res.status(400).json({ success: false, message: 'email required!!!' });
@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
     // hash password using bcrypt 
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-    const encryptedDEK = encryptDEK(null, req.body.masterKey);
+    const encryptedDEK = encryptDekWithMasterPassword(null, req.body.masterKey);
     console.log('register dek', encryptedDEK);
 
     const user = new User({
