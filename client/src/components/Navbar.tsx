@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 function Navbar() {
-    const { user, login, logout, isLoggedIn, isLoading, error } = useAuthState();
+    const { user, logout, isLoggedIn } = useAuthState();
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const navigate = useNavigate();
 

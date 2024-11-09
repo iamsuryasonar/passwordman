@@ -1,5 +1,3 @@
-import useAuthState from "../../stores/useAuthState";
-
 function HeroPage() {
 
     return <>

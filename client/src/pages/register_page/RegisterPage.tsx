@@ -9,7 +9,7 @@ function RegisterPage() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [masterKey, setMasterKey] = useState<string>('');
-    const { user, login, register, isLoggedIn, isLoading, error } = useAuthState();
+    const { register, isLoggedIn } = useAuthState();
     const navigate = useNavigate();
 
     const handleRegister = async () => {

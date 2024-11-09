@@ -8,7 +8,7 @@ function LogInPage() {
     const [show, setShow] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const { user, login, isLoggedIn, isLoading, error } = useAuthState();
+    const { login, isLoggedIn, isLoading, error } = useAuthState();
     const navigate = useNavigate();
 
     const handleLogin = async () => {

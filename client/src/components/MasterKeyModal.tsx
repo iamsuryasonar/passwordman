@@ -13,11 +13,11 @@ function MasterKeyModal(props: Props) {
     const { setShowMasterKeyModal, setDecryptedPassword, passwordId } = props;
     const [show, setShow] = useState<boolean>(false);
     const [masterKey, setMasterKey] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    // const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getPassword = async (id: string, masterKey: string) => {
         try {
-            setIsLoading(true)
+            // setIsLoading(true)
             const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
             const response = await fetch(SERVICE_BASE_URL + 'get-service/' + id, {
                 method: 'POST',
@@ -29,14 +29,14 @@ function MasterKeyModal(props: Props) {
             });
 
             if (!response.ok) {
-                setIsLoading(false)
+                // setIsLoading(false)
                 throw new Error('Could not fetch passwords');
             }
 
             const res = await response.json();
             return res.data;
         } catch (error: any) {
-            setIsLoading(false)
+            // setIsLoading(false)
             return null;
         }
     }

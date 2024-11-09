@@ -9,7 +9,7 @@ import PasswordsSection from "./components/PasswordsSection";
 import AddServiceModal from "./components/AddServiceModal";
 
 function HomePage() {
-    const { allPasswords, bookmarkedPasswords, deletedPasswords, errorMessage, getServices, updateBookmarkStatus } = usePasswordsState();
+    const { allPasswords, bookmarkedPasswords, deletedPasswords, getServices, updateBookmarkStatus } = usePasswordsState();
     const [selectedPassword, setSelectedPassword] = useState<number | null>(null);
     const [showEditModal, setShowEditModal] = useState<boolean>(false)
     const [showMasterKeyModal, setShowMasterKeyModal] = useState<boolean>(false);

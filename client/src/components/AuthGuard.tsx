@@ -6,7 +6,7 @@ interface Props {
 }
 
 export function PrivateRoute(props: Props) {
-    const { user, login, isLoggedIn, isLoading, error } = useAuthState();
+    const { isLoggedIn } = useAuthState();
 
     const { children } = props;
 
@@ -14,7 +14,7 @@ export function PrivateRoute(props: Props) {
 }
 
 export const PublicRoute = (props: Props) => {
-    const { user, login, isLoggedIn, isLoading, error } = useAuthState();
+    const {  isLoggedIn} = useAuthState();
 
     const { children } = props;
 
