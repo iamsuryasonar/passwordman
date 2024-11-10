@@ -5,17 +5,17 @@ const { verify } = require('../middleware/verifyToken');
 
 router.put('/update-master-key', verify, async (req, res) => {
 
-    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
-    if (!req.body.newMasterKey) return res.status(400).json({ success: false, message: 'New Master key required!!!' });
+    if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
+    if (!req.body.newMasterKey) return res.status(400).json({ success: false, message: 'New Master password required!!!' });
 
     try {
         let newEncryptedDEK;
         if (req.body.newMasterKey) {
 
-            const encryptedDEK = req.user.masterKey;
+            const encryptedDEK = req.user.masterPassword;
             console.log('old', encryptedDEK);
 
-            const decryptedDEK = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
+            const decryptedDEK = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
             // if not decrypted then throw error. (invalid master key)
             newEncryptedDEK = encryptDekWithMasterPassword(decryptedDEK, req.body.newMasterKey);
             console.log('new', newEncryptedDEK)
@@ -28,7 +28,7 @@ router.put('/update-master-key', verify, async (req, res) => {
             {
                 email: req.body.service || userInfo.service,
                 password: req.body.password || userInfo.password,
-                masterKey: newEncryptedDEK || userInfo.masterKey,
+                masterPassword: newEncryptedDEK || userInfo.masterPassword,
             },
         );
 

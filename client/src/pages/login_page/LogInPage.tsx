@@ -16,7 +16,6 @@ function LogInPage() {
     };
 
     useEffect(() => {
-        console.log('here')
         if (isLoggedIn) {
             navigate('/home')
         }

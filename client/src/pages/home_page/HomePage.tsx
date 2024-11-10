@@ -2,7 +2,7 @@ import usePasswordsState from "../../stores/usePasswordsState";
 import { useEffect, useState } from "react";
 import EditServiceModal from "./components/EditServiceModal";
 import { faBookmark, faVault, faTrash } from "@fortawesome/free-solid-svg-icons";
-import MasterKeyModal from "../../components/MasterKeyModal";
+import MasterKeyModal from "../../components/MasterPasswordModal";
 import SideBarMenuItem from "./components/SideBarMenuItem";
 import SearchSection from "./components/SearchSection";
 import PasswordsSection from "./components/PasswordsSection";

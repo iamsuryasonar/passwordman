@@ -9,7 +9,7 @@ const { encryptDekWithMasterPassword } = require('../utilities/encryption')
 router.post('/register', async (req, res) => {
     if (!req.body.email) return res.status(400).json({ success: false, message: 'email required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
-    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+    if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
 
     //validate the data before saving to database
     const error = registerUserValidation(req.body)
@@ -22,13 +22,13 @@ router.post('/register', async (req, res) => {
     // hash password using bcrypt 
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-    const encryptedDEK = encryptDekWithMasterPassword(null, req.body.masterKey);
+    const encryptedDEK = encryptDekWithMasterPassword(null, req.body.masterPassword);
     console.log('register dek', encryptedDEK);
 
     const user = new User({
         email: req.body.email,
         password: hashedPassword,
-        masterKey: encryptedDEK,
+        masterPassword: encryptedDEK,
     })
 
     try {

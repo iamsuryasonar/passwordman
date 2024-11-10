@@ -9,13 +9,13 @@ interface Props {
     setDecryptedPassword: (arg0: any) => void;
 }
 
-function MasterKeyModal(props: Props) {
+function MasterPasswordModal(props: Props) {
     const { setShowMasterKeyModal, setDecryptedPassword, passwordId } = props;
     const [show, setShow] = useState<boolean>(false);
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterPassword, setMasterKey] = useState<string>('');
     // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getPassword = async (id: string, masterKey: string) => {
+    const getPassword = async (id: string, masterPassword: string) => {
         try {
             // setIsLoading(true)
             const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
@@ -25,7 +25,7 @@ function MasterKeyModal(props: Props) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ masterKey }),
+                body: JSON.stringify({ masterPassword }),
             });
 
             if (!response.ok) {
@@ -42,7 +42,7 @@ function MasterKeyModal(props: Props) {
     }
 
     const handleSubmit = async () => {
-        const result = await getPassword(passwordId, masterKey)
+        const result = await getPassword(passwordId, masterPassword)
         setDecryptedPassword(result);
         setShowMasterKeyModal(false);
     };
@@ -65,7 +65,7 @@ function MasterKeyModal(props: Props) {
                             type={show ? 'text' : "password"}
                             placeholder="Master key"
                             className="w-full bg-transparent text-lg text-white focus:outline-none"
-                            value={masterKey}
+                            value={masterPassword}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />
 
@@ -89,4 +89,4 @@ function MasterKeyModal(props: Props) {
     </div >
 }
 
-export default MasterKeyModal;
+export default MasterPasswordModal;

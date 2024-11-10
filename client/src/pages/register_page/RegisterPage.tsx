@@ -8,16 +8,15 @@ function RegisterPage() {
     const [show, setShow] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterPassword, setMasterKey] = useState<string>('');
     const { register, isLoggedIn } = useAuthState();
     const navigate = useNavigate();
 
     const handleRegister = async () => {
-        await register(email, password, masterKey);
+        await register(email, password, masterPassword);
     };
 
     useEffect(() => {
-        console.log('here')
         if (isLoggedIn) {
             navigate('/home')
         }
@@ -60,7 +59,7 @@ function RegisterPage() {
                             type={show ? 'text' : "password"}
                             placeholder="Master key"
                             className="w-full border-none bg-transparent text-lg  focus:outline-none"
-                            value={masterKey}
+                            value={masterPassword}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />
 

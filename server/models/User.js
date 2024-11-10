@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         maxlength: 500,
     },
-    masterKey: {
+    masterPassword: {
         type: String,
         required: true,
         minlength: 6,

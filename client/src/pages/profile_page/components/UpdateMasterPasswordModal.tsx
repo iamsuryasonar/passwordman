@@ -11,11 +11,11 @@ function UpdateMasterPasswordModal(props: Props) {
 
     const { setShowMasterpasswordModal } = props;
     const [show, setShow] = useState<boolean>(false);
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterPassword, setMasterKey] = useState<string>('');
     const [newMasterKey, setNewMasterKey] = useState<string>('');
     // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const updateMasterPassword = async (masterKey: string, newMasterKey: string) => {
+    const updateMasterPassword = async (masterPassword: string, newMasterKey: string) => {
         try {
             // setIsLoading(true)
             const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
@@ -25,7 +25,7 @@ function UpdateMasterPasswordModal(props: Props) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ masterKey, newMasterKey }),
+                body: JSON.stringify({ masterPassword, newMasterKey }),
             });
 
             if (!response.ok) {
@@ -43,7 +43,7 @@ function UpdateMasterPasswordModal(props: Props) {
     }
 
     async function handleUpdateMasterPassword() {
-        await updateMasterPassword(masterKey, newMasterKey);
+        await updateMasterPassword(masterPassword, newMasterKey);
         setShowMasterpasswordModal(false);
     }
 
@@ -64,7 +64,7 @@ function UpdateMasterPasswordModal(props: Props) {
                             type={show ? 'text' : "password"}
                             placeholder="old master password"
                             className="w-full border-none bg-transparent text-lg focus:outline-none"
-                            value={masterKey}
+                            value={masterPassword}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />
 

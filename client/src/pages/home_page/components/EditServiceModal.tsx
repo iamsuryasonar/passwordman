@@ -17,10 +17,10 @@ function EditServiceModal(props: Props) {
     const [service, setService] = useState<string>(props.password.service);
     const [password, setPassword] = useState<string>(props.password.password);
     const [username, setUsername] = useState<string>(props.password.username);
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterPassword, setMasterKey] = useState<string>('');
 
     const handleSubmit = async () => {
-        updateService(service, username, password, masterKey, props.password._id)
+        updateService(service, username, password, masterPassword, props.password._id)
             .then(() => {
                 props.setShowEditModal(false);
             })
@@ -74,7 +74,7 @@ function EditServiceModal(props: Props) {
                             type={show ? 'text' : "password"}
                             placeholder="Enter Master Password"
                             className="w-full border-none bg-transparent text-lg focus:outline-none"
-                            value={masterKey}
+                            value={masterPassword}
                             onChange={(e) => setMasterKey(e.target.value)}
                         />
                         <button className="block" onClick={() => setShow(!show)}>

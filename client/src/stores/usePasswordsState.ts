@@ -48,7 +48,7 @@ const usePasswordsState = create<PasswordsState>(
             loading: false,
             errorMessage: null,
 
-            addService: async (service: string, username: string, password: string, masterKey: string) => {
+            addService: async (service: string, username: string, password: string, masterPassword: string) => {
                 try {
                     const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
                     const response = await fetch(SERVICE_BASE_URL + 'store-service', {
@@ -58,7 +58,7 @@ const usePasswordsState = create<PasswordsState>(
                             'Authorization': `Bearer ${token}`
                         },
 
-                        body: JSON.stringify({ service, username, password, masterKey }),
+                        body: JSON.stringify({ service, username, password, masterPassword }),
                     });
 
                     if (!response.ok) {
@@ -144,7 +144,7 @@ const usePasswordsState = create<PasswordsState>(
                 }
             },
 
-            updateService: async (service: string, username: string, password: string, masterKey: string, id: string) => {
+            updateService: async (service: string, username: string, password: string, masterPassword: string, id: string) => {
                 set({ loading: true, errorMessage: null });
 
                 try {
@@ -156,7 +156,7 @@ const usePasswordsState = create<PasswordsState>(
                             'Authorization': `Bearer ${token}`
                         },
 
-                        body: JSON.stringify({ service, username, password, masterKey }),
+                        body: JSON.stringify({ service, username, password, masterPassword }),
                     });
 
                     if (!response.ok) {

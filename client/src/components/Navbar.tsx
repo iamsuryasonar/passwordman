@@ -19,7 +19,7 @@ function Navbar() {
             isLoggedIn ?
                 <nav className="z-50 sticky top-0 right-0 left-0 px-3 m-auto h-[60px] bg-gray-900 flex justify-between items-center">
                     <div className="max-w-[1240px] m-auto w-full flex justify-between items-center text-white">
-                        <Link to="/home" className="text-lg font-bold">PassMan</Link>
+                        <Link to="/" className="text-lg font-bold">PassMan</Link>
                         <div className="flex gap-2" onClick={() => {
                             setShowMenu(!showMenu)
                         }}>
@@ -53,9 +53,23 @@ function Navbar() {
                     </div>
                 </nav>
                 :
-                <nav className="flex justify-between">
-                    <p>PassMan</p>
-                </nav>
+                <nav className="z-50 sticky top-0 right-0 left-0 px-3 m-auto h-[60px] bg-gray-900 flex justify-between items-center">
+                    <div className="max-w-[1240px] m-auto w-full flex justify-between items-center text-white">
+                        <Link to="/" className="text-lg font-bold">PassMan</Link>
+                        <div className="flex gap-2">
+                            <button onClick={() => {
+                                navigate('/login')
+                            }} className="border border-gray-700 rounded-md px-2 py-1 hover:border-white">
+                                Log In
+                            </button>
+                            <button onClick={() => {
+                                navigate('/register')
+                            }} className="border border-gray-700 rounded-md px-2 py-1 hover:border-white">
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </nav >
         }
     </>
 }

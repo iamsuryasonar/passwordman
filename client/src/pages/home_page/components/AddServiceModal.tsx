@@ -15,13 +15,13 @@ function AddServiceModal(props: Props) {
     const [show, setShow] = useState<boolean>(false);
     const [service, setService] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [masterKey, setMasterKey] = useState<string>('');
+    const [masterPassword, setMasterKey] = useState<string>('');
 
     const [username, setUsername] = useState<string>('');
     const { loading, addService } = usePasswordsState();
 
     const handleSubmit = async () => {
-        addService(service, username, password, masterKey)
+        addService(service, username, password, masterPassword)
             .then(() => {
                 setShowAddServiceModal(false);
             })
@@ -76,7 +76,7 @@ function AddServiceModal(props: Props) {
                                 type={show ? 'text' : "password"}
                                 placeholder="master key"
                                 className="w-full border-none bg-transparent text-lg focus:outline-none"
-                                value={masterKey}
+                                value={masterPassword}
                                 onChange={(e) => setMasterKey(e.target.value)}
                             />
 

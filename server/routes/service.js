@@ -7,7 +7,7 @@ router.post('/store-service', verify, async (req, res) => {
     if (!req.body.service) return res.status(400).json({ success: false, message: 'service required!!!' });
     if (!req.body.username) return res.status(400).json({ success: false, message: 'username required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
-    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+    if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
 
     try {
         /* 
@@ -18,10 +18,10 @@ router.post('/store-service', verify, async (req, res) => {
         const serviceExist = await Service.findOne({ service: req.body.service, username: req.body.username });
         if (serviceExist) return res.status(400).json({ success: false, message: 'Service already exists', data: null });
 
-        // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterKey);
-        const encryptedDEK = req.user.masterKey;
+        // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterPassword);
+        const encryptedDEK = req.user.masterPassword;
 
-        const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
+        const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
         // if not decrypted then throw error. (invalid master key)
 
         const encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
@@ -56,11 +56,11 @@ router.get('/get-services', verify, async (req, res) => {
 
 router.post('/get-service/:id', verify, async (req, res) => {
 
-    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+    if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
     try {
-        const encryptedDEK = req.user.masterKey;
+        const encryptedDEK = req.user.masterPassword;
 
-        const dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
+        const dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
         // if not decrypted then throw error. (invalid master key)
 
 
@@ -68,7 +68,7 @@ router.post('/get-service/:id', verify, async (req, res) => {
 
         if (!serviceInfo) return res.status(400).json({ success: false, message: 'Service info does not exists', data: null });
 
-        // const decryptedPassword = utils.decryptPassword(serviceInfo.password, req.body.masterKey);
+        // const decryptedPassword = utils.decryptPassword(serviceInfo.password, req.body.masterPassword);
 
         const decryptedPassword = decryptPasswordWithDek(serviceInfo.password, dek_to_decrypt);
 
@@ -83,20 +83,20 @@ router.post('/get-service/:id', verify, async (req, res) => {
 
 router.put('/update-service/:id', verify, async (req, res) => {
 
-    if (!req.body.masterKey) return res.status(400).json({ success: false, message: 'Master key required!!!' });
+    if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
 
     try {
         let encryptedPassword;
         if (req.body.password) {
 
-            const encryptedDEK = req.user.masterKey;
+            const encryptedDEK = req.user.masterPassword;
 
-            const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterKey);
+            const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
             // if not decrypted then throw error. (invalid master key)
 
             encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
 
-            // encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterKey);
+            // encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterPassword);
         }
 
         const serviceInfo = await Service.findById({ user: req.user, _id: req.params.id });
