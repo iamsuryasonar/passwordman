@@ -1,4 +1,4 @@
-## Password Manager
+## PASSWORDvault
 A secure and user-friendly password manager built with React, Node.js, Express and MongoDB. This application helps users store and manage their passwords safely by encrypting sensitive data using AES encryption.
 
 #### Features

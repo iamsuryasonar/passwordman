@@ -74,7 +74,7 @@ const useAuthState = create<AuthState>(
             logout: () => set({ user: null, isLoggedIn: false, error: null }),
         }),
         {
-            name: 'passman-auth-storage', // Unique name for localStorage key
+            name: 'PASSWORDvault-auth-storage', // Unique name for localStorage key
         }
     )
 );

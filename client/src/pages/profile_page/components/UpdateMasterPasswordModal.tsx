@@ -18,7 +18,7 @@ function UpdateMasterPasswordModal(props: Props) {
     const updateMasterPassword = async (masterPassword: string, newMasterKey: string) => {
         try {
             // setIsLoading(true)
-            const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+            const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
             const response = await fetch(PROFILE_BASE_URL + 'update-master-key', {
                 method: 'PUT',
                 headers: {

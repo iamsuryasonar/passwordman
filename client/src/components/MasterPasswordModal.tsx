@@ -18,7 +18,7 @@ function MasterPasswordModal(props: Props) {
     const getPassword = async (id: string, masterPassword: string) => {
         try {
             // setIsLoading(true)
-            const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+            const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
             const response = await fetch(SERVICE_BASE_URL + 'get-service/' + id, {
                 method: 'POST',
                 headers: {

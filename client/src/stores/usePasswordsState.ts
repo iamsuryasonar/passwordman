@@ -50,7 +50,7 @@ const usePasswordsState = create<PasswordsState>(
 
             addService: async (service: string, username: string, password: string, masterPassword: string) => {
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
                     const response = await fetch(SERVICE_BASE_URL + 'store-service', {
                         method: 'POST',
                         headers: {
@@ -83,7 +83,7 @@ const usePasswordsState = create<PasswordsState>(
                 set({ loading: true, errorMessage: null });
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
                     const response = await fetch(SERVICE_BASE_URL + 'get-services', {
                         method: 'GET',
                         headers: {
@@ -116,7 +116,7 @@ const usePasswordsState = create<PasswordsState>(
 
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
                     const response = await fetch(SERVICE_BASE_URL + path + id, {
                         method: 'PUT',
                         headers: {
@@ -148,7 +148,7 @@ const usePasswordsState = create<PasswordsState>(
                 set({ loading: true, errorMessage: null });
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
                     const response = await fetch(SERVICE_BASE_URL + `update-service/${id}`, {
                         method: 'PUT',
                         headers: {
@@ -183,7 +183,7 @@ const usePasswordsState = create<PasswordsState>(
                 set({ loading: true, errorMessage: null });
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
                     const response = await fetch(SERVICE_BASE_URL + 'delete-service/' + id, {
                         method: 'PUT',
                         headers: {
@@ -215,7 +215,7 @@ const usePasswordsState = create<PasswordsState>(
                 set({ loading: true, errorMessage: null });
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
                     const response = await fetch(SERVICE_BASE_URL + 'permanently-delete-service/' + id, {
                         method: 'DELETE',
                         headers: {
@@ -247,7 +247,7 @@ const usePasswordsState = create<PasswordsState>(
                 set({ loading: true, errorMessage: null });
 
                 try {
-                    const token = JSON.parse(localStorage.getItem('passman-auth-storage')!).state.user.token;
+                    const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
                     const response = await fetch(SERVICE_BASE_URL + 'undo-deleted-service/' + id, {
                         method: 'PUT',
                         headers: {
@@ -277,7 +277,7 @@ const usePasswordsState = create<PasswordsState>(
         }),
 
         {
-            name: 'passman-passwords-storage', // Unique name for localStorage key
+            name: 'PASSWORDvault-passwords-storage', // Unique name for localStorage key
         }
     )
 );
