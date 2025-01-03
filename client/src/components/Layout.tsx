@@ -8,13 +8,15 @@ function Layout() {
     const { isLoading } = useAuthState();
 
     return (
-        <div className="bg-gray-900">
-            {(loading || isLoading) && <div className="h-[3px] w-full line_container">
-                <div className="moving_gradient">loading</div>
-            </div>}
-            <div className="max-w-[1240px] m-auto relative min-h-[100vh]">
+        <div className="bg-gray-900 min-h-screen">
+            {
+                (loading || isLoading) && <div className="h-[3px] w-full line_container">
+                    <div className="moving_gradient">loading</div>
+                </div>
+            }
+            <div className="max-w-[1240px] w-full m-auto relative">
                 <Navbar />
-                <div className='w-full flex h-[calc(100vh-60px)] overflow-hidden p-4'>
+                <div className='w-full h-full min-h-[calc(100svh-60px)] overflow-hidden p-4 flex'>
                     <Outlet />
                 </div>
             </div >
