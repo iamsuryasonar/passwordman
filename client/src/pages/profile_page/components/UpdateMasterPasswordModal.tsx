@@ -34,7 +34,6 @@ function UpdateMasterPasswordModal(props: Props) {
             }
 
             const res = await response.json();
-            console.log(res)
             return res.data;
         } catch (error: any) {
             // setIsLoading(false)
@@ -50,6 +49,7 @@ function UpdateMasterPasswordModal(props: Props) {
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90p-3 flex flex-col items-center justify-center text-white">
         <div className="p-3">
             <div className="relative p-6 border border-gray-700 rounded-md">
+
                 <div className="absolute z-50 right-0 top-0 group w-8 aspect-square rounded-tr-md rounded-bl-md bg-red-300 grid cursor-pointer place-content-center"
                     onClick={() => {
                         setShowMasterpasswordModal(false);

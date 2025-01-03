@@ -8,18 +8,22 @@ function LogInPage() {
     const [show, setShow] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const { login, isLoggedIn, isLoading, error } = useAuthState();
+    const { login, isLoggedIn, isLoading, authMessage } = useAuthState();
     const navigate = useNavigate();
-
-    const handleLogin = async () => {
-        await login(email, password);
-    };
 
     useEffect(() => {
         if (isLoggedIn) {
             navigate('/home')
         }
     }, [])
+
+    const handleLogin = async () => {
+        await login(email, password);
+    };
+
+    const handleGuestLogIn = async () => {
+        await login('test2@gmail.com', '11111111');
+    }
 
     return <>
         <div className="absolute p-3 inset-0 flex flex-col items-center justify-center text-white">
@@ -57,7 +61,12 @@ function LogInPage() {
                     >
                         Log in
                     </button>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <button className="border-[1px] border-slate-500 rounded-md px-2 py-1"
+                        onClick={handleGuestLogIn} disabled={isLoading}
+                    >
+                        Guest log in
+                    </button>
+                    {authMessage && <p style={{ color: 'red' }}>{authMessage}</p>}
                 </div>
             </div>
         </div>

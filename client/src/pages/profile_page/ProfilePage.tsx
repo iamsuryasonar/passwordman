@@ -8,7 +8,7 @@ function ProfilePage() {
 
     const [showMasterPasswordModal, setShowMasterpasswordModal] = useState<boolean>(false);
 
-    return <div className="absolute inset-0 flex items-center justify-center text-white">
+    return <div className="place-self-center m-auto flex items-center justify-center text-white">
         <div className="p-6 border border-gray-700 rounded-md flex flex-col gap-2">
             <p className="text-lg font-semibold place-self-center">Profile</p>
             <p>{user?.email}</p>

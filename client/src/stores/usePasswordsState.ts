@@ -24,7 +24,7 @@ interface PasswordsState {
     bookmarkedPasswords: Service[] | null;
     deletedPasswords: Service[] | null;
     loading: boolean;
-    errorMessage: string | null;
+    passMessage: string | null;
     addService: (arg0: string, arg1: string, arg3: string, arg4: string) => Promise<void>;
     getServices: () => Promise<void>;
     updateBookmarkStatus: (arg0: string, arg1: string) => Promise<void>;
@@ -46,10 +46,11 @@ const usePasswordsState = create<PasswordsState>(
             bookmarkedPasswords: null,
             deletedPasswords: null,
             loading: false,
-            errorMessage: null,
+            passMessage: null,
 
             addService: async (service: string, username: string, password: string, masterPassword: string) => {
                 try {
+                    set({ loading: true, passMessage: null });
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
                     const response = await fetch(SERVICE_BASE_URL + 'store-service', {
                         method: 'POST',
@@ -72,15 +73,16 @@ const usePasswordsState = create<PasswordsState>(
                         allPasswords: allPasswords,
                         deletedPasswords: deletedPasswords,
                         bookmarkedPasswords: bookmarkedPasswords,
-                        loading: false
+                        loading: false,
+                        passMessage: 'Password added successfully!'
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
             getServices: async () => {
-                set({ loading: true, errorMessage: null });
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
@@ -104,16 +106,15 @@ const usePasswordsState = create<PasswordsState>(
                         allPasswords: allPasswords,
                         deletedPasswords: deletedPasswords,
                         bookmarkedPasswords: bookmarkedPasswords,
-                        loading: false
+                        loading: false,
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
             updateBookmarkStatus: async (path: string, id: string) => {
-                set({ loading: true, errorMessage: null });
-
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
@@ -138,14 +139,15 @@ const usePasswordsState = create<PasswordsState>(
                         deletedPasswords: deletedPasswords,
                         bookmarkedPasswords: bookmarkedPasswords,
                         loading: false,
+                        passMessage: 'Bookmarked'
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
             updateService: async (service: string, username: string, password: string, masterPassword: string, id: string) => {
-                set({ loading: true, errorMessage: null });
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
@@ -171,16 +173,17 @@ const usePasswordsState = create<PasswordsState>(
                         deletedPasswords: deletedPasswords,
                         bookmarkedPasswords: bookmarkedPasswords,
                         loading: false,
+                        passMessage: 'Service updated'
                     });
 
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
 
             deletePassword: async (id: string) => {
-                set({ loading: true, errorMessage: null });
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
@@ -207,12 +210,12 @@ const usePasswordsState = create<PasswordsState>(
                         loading: false,
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
             permanentlyDeletePassword: async (id: string) => {
-                set({ loading: true, errorMessage: null });
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
@@ -237,14 +240,15 @@ const usePasswordsState = create<PasswordsState>(
                         deletedPasswords: deletedPasswords,
                         bookmarkedPasswords: bookmarkedPasswords,
                         loading: false,
+                        passMessage: 'Password permanently deleted'
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
 
             undoDeletePassword: async (id: string) => {
-                set({ loading: true, errorMessage: null });
+                set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
@@ -271,7 +275,7 @@ const usePasswordsState = create<PasswordsState>(
                         loading: false,
                     });
                 } catch (error: any) {
-                    set({ errorMessage: error.message, loading: false });
+                    set({ passMessage: error.message, loading: false });
                 }
             },
         }),

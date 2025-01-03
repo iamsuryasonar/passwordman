@@ -25,7 +25,7 @@ function PasswordsSection(props: Props1) {
         setShowEditModal,
         setShowMasterKeyModal,
     } = props;
-    
+
     const { deletePassword, permanentlyDeletePassword, undoDeletePassword } = usePasswordsState();
 
     function deleteHandler(id: string) {
@@ -43,7 +43,6 @@ function PasswordsSection(props: Props1) {
     async function copyToClipboard(text: string) {
         try {
             await navigator.clipboard.writeText(text);
-            console.log('copied');
         } catch (err) {
             console.log(err);
         }
@@ -57,17 +56,17 @@ function PasswordsSection(props: Props1) {
                     key={service._id}
                 >
                     <div className="flex justify-between items-center gap-2 py-1">
-                        <div className="w-full flex justify-between items-center"
+                        <div className="w-full flex justify-between items-center cursor-pointer"
                             onClick={() => {
                                 selectedPassword === index ?
                                     setSelectedPassword(null)
                                     :
                                     setSelectedPassword(index);
                             }}>
-                            <p className="cursor-pointer">
+                            <p className="">
                                 {service.service}
                             </p>
-                            <div className="w-8 h-8 rounded-full flex place-content-center cursor-pointer">
+                            <div className="w-8 h-8 rounded-full flex place-content-center">
                                 {
                                     (selectedPassword !== null) && (selectedPassword === index) ?
                                         <FontAwesomeIcon icon={faCaretUp} className="place-self-center cursor-pointer" />

@@ -60,7 +60,7 @@ function HomePage() {
     }, [])
 
     return <div className="w-full flex relative gap-2 text-white">
-        <aside className="fixed top-[60px] bottom-0 w-[60px] sm:w-[200px] min-h-screen px-3 flex flex-col items-center sm:items-stretch gap-2">
+        <aside className="py-4 fixed top-[60px] bottom-0 w-[60px] sm:w-[200px] min-h-screen px-3 flex flex-col items-center sm:items-stretch gap-2">
             <SideBarMenuItem title={'All'} icon={faVault} color={'lightgreen'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
             <SideBarMenuItem title={'Bookmarked'} icon={faBookmark} color={'yellow'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
             <SideBarMenuItem title={'Trash'} icon={faTrash} color={'red'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />

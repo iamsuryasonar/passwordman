@@ -21,8 +21,12 @@ router.post('/store-service', verify, async (req, res) => {
         // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterPassword);
         const encryptedDEK = req.user.masterPassword;
 
-        const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
-        // if not decrypted then throw error. (invalid master key)
+        let dek_to_encrypt;
+        try {
+            dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
+        } catch (err) {
+            return res.status(400).json({ success: false, message: 'Wrong master password', data: null });
+        }
 
         const encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
 

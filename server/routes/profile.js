@@ -13,12 +13,10 @@ router.put('/update-master-key', verify, async (req, res) => {
         if (req.body.newMasterKey) {
 
             const encryptedDEK = req.user.masterPassword;
-            console.log('old', encryptedDEK);
 
             const decryptedDEK = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
             // if not decrypted then throw error. (invalid master key)
             newEncryptedDEK = encryptDekWithMasterPassword(decryptedDEK, req.body.newMasterKey);
-            console.log('new', newEncryptedDEK)
         }
 
         const userInfo = await User.findById({ _id: req.user._id });
