@@ -1,49 +1,21 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
-import { SERVICE_BASE_URL } from "../constants/constants";
 
 interface Props {
     setShowMasterKeyModal: (arg0: boolean) => void;
-    passwordId: string;
-    setDecryptedPassword: (arg0: any) => void;
+    onSubmit: (arg0: string) => void;
 }
 
 function MasterPasswordModal(props: Props) {
-    const { setShowMasterKeyModal, setDecryptedPassword, passwordId } = props;
+    const { setShowMasterKeyModal, onSubmit } = props;
+
     const [show, setShow] = useState<boolean>(false);
     const [masterPassword, setMasterKey] = useState<string>('');
     // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getPassword = async (id: string, masterPassword: string) => {
-        try {
-            // setIsLoading(true)
-            const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
-            const response = await fetch(SERVICE_BASE_URL + 'get-service/' + id, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ masterPassword }),
-            });
-
-            if (!response.ok) {
-                // setIsLoading(false)
-                throw new Error('Could not fetch passwords');
-            }
-
-            const res = await response.json();
-            return res.data;
-        } catch (error: any) {
-            // setIsLoading(false)
-            return null;
-        }
-    }
-
     const handleSubmit = async () => {
-        const result = await getPassword(passwordId, masterPassword)
-        setDecryptedPassword(result);
+        onSubmit(masterPassword);
         setShowMasterKeyModal(false);
     };
 

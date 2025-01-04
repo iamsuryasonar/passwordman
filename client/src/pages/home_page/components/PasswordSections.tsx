@@ -1,36 +1,42 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faBookmark, faTrash, faCaretUp, faTrashRestore } from "@fortawesome/free-solid-svg-icons";
 import usePasswordsState from "../../../stores/usePasswordsState";
+import { useState } from "react";
+import { SERVICE_BASE_URL } from "../../../constants/constants";
+import MasterKeyModal from '../../../components/MasterPasswordModal'
 
 interface Props1 {
     activeMenu: string;
     passwords: any;
     selectedPassword: number | null;
-    decryptedPassword: any;
     bookmarkHandler: (arg0: boolean, arg1: 'string') => void;
     setSelectedPassword: (arg0: number | null) => void;
     setShowEditModal: (arg0: boolean) => void;
-    setShowMasterKeyModal: (arg0: boolean) => void;
 }
 
-function PasswordsSection(props: Props1) {
+function PasswordSections(props: Props1) {
 
     const {
         activeMenu,
         passwords,
         selectedPassword,
-        decryptedPassword,
         bookmarkHandler,
         setSelectedPassword,
         setShowEditModal,
-        setShowMasterKeyModal,
     } = props;
 
+    const [decryptedPassword, setDecryptedPassword] = useState<any | null>(null);
+    const [showMasterKeyModalToShowPassword, setShowMasterKeyModalToShowPassword] = useState<boolean>(false);
+    const [showMasterKeyModalToDeletePassword, setShowMasterKeyModalToDeletePassword] = useState<boolean>(false);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    let masterPassWord = ''
     const { deletePassword, permanentlyDeletePassword, undoDeletePassword } = usePasswordsState();
 
     function deleteHandler(id: string) {
         if (activeMenu === 'Trash' && selectedPassword !== null) {
-            permanentlyDeletePassword(passwords[selectedPassword]._id);
+            setShowMasterKeyModalToDeletePassword(true);
         } else {
             deletePassword(id);
         }
@@ -48,9 +54,49 @@ function PasswordsSection(props: Props1) {
         }
     }
 
+    const getPassword = async (id: string, masterPassword: string) => {
+        try {
+            setIsLoading(true)
+            const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
+            const response = await fetch(SERVICE_BASE_URL + 'get-service/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ masterPassword }),
+            });
+
+            if (!response.ok) {
+                setIsLoading(false)
+                throw new Error('Could not fetch passwords');
+            }
+
+            const res = await response.json();
+            return res.data;
+        } catch (error: any) {
+            return null;
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    async function onSubmitHandlerToShowPassword(masterPassword: string) {
+        if (passwords && selectedPassword !== null) {
+            let result = await getPassword(passwords[selectedPassword]._id, masterPassword);
+            setDecryptedPassword(result)
+        }
+    }
+
+    function onSubmitHandlerToDeletePassword() {
+        if (passwords && selectedPassword !== null) {
+            permanentlyDeletePassword({ id: passwords[selectedPassword]._id, masterPassWord });
+        }
+    }
+
     return <>
         {
-            passwords !== null && passwords.map((service: any, index: any) => {
+            passwords && passwords !== null && passwords.map((service: any, index: any) => {
                 return <div
                     className="bg-gray-900 border border-gray-700 hover:border-white text-white p-2 m-2 rounded-md pointer-cursor"
                     key={service._id}
@@ -144,10 +190,10 @@ function PasswordsSection(props: Props1) {
                                             :
                                             <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
                                                 onClick={() => {
-                                                    setShowMasterKeyModal(true);
+                                                    setShowMasterKeyModalToShowPassword(true);
                                                 }}
                                             >
-                                                Decrypt
+                                                {isLoading ? "Decrypting" : "Decrypt"}
                                             </button>
                                     }
 
@@ -158,7 +204,15 @@ function PasswordsSection(props: Props1) {
                 </div>
             })
         }
+        {
+            showMasterKeyModalToShowPassword &&
+            <MasterKeyModal onSubmit={onSubmitHandlerToShowPassword} setShowMasterKeyModal={setShowMasterKeyModalToShowPassword} />
+        }
+        {
+            showMasterKeyModalToDeletePassword &&
+            <MasterKeyModal onSubmit={onSubmitHandlerToDeletePassword} setShowMasterKeyModal={setShowMasterKeyModalToDeletePassword} />
+        }
     </>
 }
 
-export default PasswordsSection;
+export default PasswordSections;

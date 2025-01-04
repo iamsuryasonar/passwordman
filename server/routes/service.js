@@ -22,6 +22,7 @@ router.post('/store-service', verify, async (req, res) => {
         const encryptedDEK = req.user.masterPassword;
 
         let dek_to_encrypt;
+
         try {
             dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
         } catch (err) {
@@ -64,15 +65,16 @@ router.post('/get-service/:id', verify, async (req, res) => {
     try {
         const encryptedDEK = req.user.masterPassword;
 
-        const dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
-        // if not decrypted then throw error. (invalid master key)
+        let dek_to_decrypt;
 
+        try {
+            dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
+        } catch (err) {
+            return res.status(400).json({ success: false, message: 'Wrong master password', data: null });
+        }
 
         const serviceInfo = await Service.findById({ user: req.user, _id: req.params.id });
-
         if (!serviceInfo) return res.status(400).json({ success: false, message: 'Service info does not exists', data: null });
-
-        // const decryptedPassword = utils.decryptPassword(serviceInfo.password, req.body.masterPassword);
 
         const decryptedPassword = decryptPasswordWithDek(serviceInfo.password, dek_to_decrypt);
 
@@ -95,12 +97,15 @@ router.put('/update-service/:id', verify, async (req, res) => {
 
             const encryptedDEK = req.user.masterPassword;
 
-            const dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
-            // if not decrypted then throw error. (invalid master key)
+            let dek_to_encrypt;
+
+            try {
+                dek_to_encrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
+            } catch (err) {
+                return res.status(400).json({ success: false, message: 'Wrong master password', data: null });
+            }
 
             encryptedPassword = encryptPasswordWithDek(req.body.password, dek_to_encrypt);
-
-            // encryptedPassword = utils.encryptPassword(req.body?.password, req.user.masterPassword);
         }
 
         const serviceInfo = await Service.findById({ user: req.user, _id: req.params.id });
@@ -218,6 +223,15 @@ router.get('/get-bookmarked-services', verify, async (req, res) => {
 
 router.delete('/permanently-delete-service/:id', verify, async (req, res) => {
     try {
+
+        let dek_to_decrypt;
+
+        try {
+            dek_to_decrypt = decryptDekWithMasterPassword(encryptedDEK, req.body.masterPassword);
+        } catch (err) {
+            return res.status(400).json({ success: false, message: 'Wrong master password', data: null });
+        }
+
         let deletedService = await Service.deleteOne({ _id: req.params.id, user: req.user._id });
         const service = await Service.find({ user: req.user }).select('-password');
 

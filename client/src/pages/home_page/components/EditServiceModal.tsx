@@ -1,7 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faClose } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usePasswordsState from '../../../stores/usePasswordsState';
+import { generatePassword, getPasswordStrength } from "../../../utils";
+import PasswordStrengthProgress from "../../../components/PasswordStrengthProgress";
 
 interface Props {
     password: any;
@@ -9,15 +11,22 @@ interface Props {
     onUpdate: () => void;
 }
 
+interface Strength {
+    value: number,
+    type: string,
+    color: string,
+}
+
 function EditServiceModal(props: Props) {
 
     const { loading, updateService } = usePasswordsState();
 
     const [show, setShow] = useState<boolean>(false);
-    const [service, setService] = useState<string>(props.password.service);
-    const [password, setPassword] = useState<string>(props.password.password);
-    const [username, setUsername] = useState<string>(props.password.username);
+    const [service, setService] = useState<string>(props.password.service || '');
+    const [password, setPassword] = useState<string>(props.password.password || '');
+    const [username, setUsername] = useState<string>(props.password.username || '');
     const [masterPassword, setMasterKey] = useState<string>('');
+    const [passwordStrength, setPasswordStrength] = useState<Strength | null>(null);
 
     const handleSubmit = async () => {
         updateService(service, username, password, masterPassword, props.password._id)
@@ -25,6 +34,16 @@ function EditServiceModal(props: Props) {
                 props.setShowEditModal(false);
             })
     };
+
+    useEffect(() => {
+        let strength = getPasswordStrength(password);
+        setPasswordStrength(strength);
+    }, [password]);
+
+    const handleGeneratePassword = () => {
+        let generatedPassword = generatePassword();
+        setPassword(generatedPassword);
+    }
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90 text-white flex justify-center items-center ">
         <div className="p-3">
@@ -52,23 +71,28 @@ function EditServiceModal(props: Props) {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)} />
                     </div>
-                    <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700 hover:border-white">
-                        <input
-                            type={show ? 'text' : "password"}
-                            placeholder="Enter new password"
-                            className="w-full border-none bg-transparent text-lg focus:outline-none"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button className="block" onClick={() => setShow(!show)}>
-                            <div>
-                                {show ? <FontAwesomeIcon icon={faEye} />
-                                    :
-                                    <FontAwesomeIcon icon={faEyeSlash} />
-                                }
-                            </div>
-                        </button>
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700 hover:border-white">
+                            <input
+                                type={show ? 'text' : "password"}
+                                placeholder="Enter new password"
+                                className="w-full border-none bg-transparent text-lg focus:outline-none"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button className="block" onClick={() => setShow(!show)}>
+                                <div>
+                                    {show ? <FontAwesomeIcon icon={faEye} />
+                                        :
+                                        <FontAwesomeIcon icon={faEyeSlash} />
+                                    }
+                                </div>
+                            </button>
+                        </div>
+                        <PasswordStrengthProgress passwordStrength={passwordStrength} />
+                        <button className="text-white place-self-end text-sm hover:text-green-300 hover:underline" onClick={handleGeneratePassword}>Generate password</button>
                     </div>
+
                     <div className="flex items-center justify-between space-x-2 rounded-md bg-transparent px-2 py-1 border border-1 border-gray-700 hover:border-white">
                         <input
                             type={show ? 'text' : "password"}

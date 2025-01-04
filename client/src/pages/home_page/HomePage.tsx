@@ -2,40 +2,43 @@ import usePasswordsState from "../../stores/usePasswordsState";
 import { useEffect, useState } from "react";
 import EditServiceModal from "./components/EditServiceModal";
 import { faBookmark, faVault, faTrash } from "@fortawesome/free-solid-svg-icons";
-import MasterKeyModal from "../../components/MasterPasswordModal";
 import SideBarMenuItem from "./components/SideBarMenuItem";
 import SearchSection from "./components/SearchSection";
-import PasswordsSection from "./components/PasswordsSection";
+import PasswordSections from "./components/PasswordSections";
 import AddServiceModal from "./components/AddServiceModal";
 
 function HomePage() {
     const { allPasswords, bookmarkedPasswords, deletedPasswords, getServices, updateBookmarkStatus } = usePasswordsState();
     const [selectedPassword, setSelectedPassword] = useState<number | null>(null);
     const [showEditModal, setShowEditModal] = useState<boolean>(false)
-    const [showMasterKeyModal, setShowMasterKeyModal] = useState<boolean>(false);
-    const [decryptedPassword, setDecryptedPassword] = useState<any | null>(null);
+
     const [searchText, setSearchText] = useState<string>('');
     const [activeMenu, setActiveMenu] = useState<string>('All');
     const [showAddServiceModal, setShowAddServiceModal] = useState<boolean>(false);
 
-    let activePasswords: any;
+    let allActivePasswords: any;
+    let searchedActivePasswords: any;
 
     if (activeMenu === 'All') {
-        activePasswords = allPasswords;
+        allActivePasswords = allPasswords;
     } else if (activeMenu === 'Bookmarked') {
-        activePasswords = bookmarkedPasswords;
+        allActivePasswords = bookmarkedPasswords;
     } else if (activeMenu === 'Trash') {
-        activePasswords = deletedPasswords;
+        allActivePasswords = deletedPasswords;
     }
 
     function regexMatchSearchkeyword(searchText: string) {
-        const pattern = new RegExp(`[${searchText}]`, 'i');
-        activePasswords = activePasswords.filter((el: any) => pattern.test(el.service));
+        const pattern = new RegExp(searchText, 'i');
+        return allActivePasswords.filter((el: any) => pattern.test(el.service));
     }
 
-    if (searchText !== '') {
-        regexMatchSearchkeyword(searchText);
+    if (searchText.length > 0) {
+        searchedActivePasswords = regexMatchSearchkeyword(searchText);
     }
+
+    useEffect(() => {
+        getServices();
+    }, []);
 
     async function bookmarkHandler(bookmarkStatus: boolean, id: string) {
         let path;
@@ -55,10 +58,6 @@ function HomePage() {
         setSearchText('');
     }
 
-    useEffect(() => {
-        getServices();
-    }, [])
-
     return <div className="w-full flex relative gap-2 text-white">
         <aside className="py-4 fixed top-[60px] bottom-0 w-[60px] sm:w-[200px] min-h-screen px-3 flex flex-col items-center sm:items-stretch gap-2">
             <SideBarMenuItem title={'All'} icon={faVault} color={'lightgreen'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
@@ -70,25 +69,19 @@ function HomePage() {
             <div className="p-2 mb-4 flex gap-2 justify-between">
                 <SearchSection searchText={searchText} setSearchText={setSearchText} setShowAddServiceModal={setShowAddServiceModal} />
             </div>
-            <PasswordsSection
+
+            <PasswordSections
                 activeMenu={activeMenu}
-                passwords={activePasswords}
+                passwords={searchText ? searchedActivePasswords : allActivePasswords}
                 selectedPassword={selectedPassword}
-                decryptedPassword={decryptedPassword}
                 setSelectedPassword={setSelectedPassword}
                 bookmarkHandler={bookmarkHandler}
                 setShowEditModal={setShowEditModal}
-                setShowMasterKeyModal={setShowMasterKeyModal}
             />
 
             {
                 showAddServiceModal &&
-                <AddServiceModal setShowAddServiceModal={setShowAddServiceModal} />
-            }
-
-            {
-                showMasterKeyModal && allPasswords && selectedPassword !== null &&
-                <MasterKeyModal passwordId={allPasswords[selectedPassword]._id} setDecryptedPassword={setDecryptedPassword} setShowMasterKeyModal={setShowMasterKeyModal} />
+                <AddServiceModal setShowAddServiceModal={setShowAddServiceModal} setActiveMenu={setActiveMenu} />
             }
 
             {

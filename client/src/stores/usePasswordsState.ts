@@ -31,7 +31,7 @@ interface PasswordsState {
     updateService: (arg0: string, arg1: string, arg3: string, arg4: string, arg5: string) => Promise<void>;
     deletePassword: (arg0: string) => Promise<void>;
     undoDeletePassword: (arg0: string) => Promise<void>;
-    permanentlyDeletePassword: (arg0: string) => Promise<void>;
+    permanentlyDeletePassword: (arg0: any) => Promise<void>;
 }
 
 type MyPersist = (
@@ -214,17 +214,18 @@ const usePasswordsState = create<PasswordsState>(
                 }
             },
 
-            permanentlyDeletePassword: async (id: string) => {
+            permanentlyDeletePassword: async (body: any) => {
                 set({ loading: true, passMessage: null });
 
                 try {
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token;
-                    const response = await fetch(SERVICE_BASE_URL + 'permanently-delete-service/' + id, {
+                    const response = await fetch(SERVICE_BASE_URL + 'permanently-delete-service/' + body.id, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`,
                         },
+                        body: JSON.stringify({ masterPassword: body.masterPassword }),
                     });
 
                     if (!response.ok) {
