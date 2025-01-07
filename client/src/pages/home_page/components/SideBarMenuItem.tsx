@@ -16,7 +16,7 @@ function SideBarMenuItem(props: Props1) {
         onClick={() => {
             setActiveMenu(title)
         }} >
-        <FontAwesomeIcon icon={icon} className="w-6 place-self-center cursor-pointer"
+        <FontAwesomeIcon icon={icon} className="w-4 place-self-center cursor-pointer"
             style={{ color: color }} />
         <p className="hidden sm:block">{title}</p>
     </ div >

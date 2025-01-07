@@ -6,19 +6,15 @@ const { decryptDekWithMasterPassword, encryptPasswordWithDek, decryptPasswordWit
 router.post('/store-service', verify, async (req, res) => {
     if (!req.body.service) return res.status(400).json({ success: false, message: 'service required!!!' });
     if (!req.body.username) return res.status(400).json({ success: false, message: 'username required!!!' });
+    if (!req.body.strength) return res.status(400).json({ success: false, message: 'password strength required!!!' });
     if (!req.body.password) return res.status(400).json({ success: false, message: 'password required!!!' });
     if (!req.body.masterPassword) return res.status(400).json({ success: false, message: 'Master password required!!!' });
 
     try {
-        /* 
-            if random password generation option is provided in request body then generate random password
-        */
-
         //check if password already exists
         const serviceExist = await Service.findOne({ service: req.body.service, username: req.body.username });
         if (serviceExist) return res.status(400).json({ success: false, message: 'Service already exists', data: null });
 
-        // const encryptedPassword = utils.encryptPassword(req.body.password, req.user.masterPassword);
         const encryptedDEK = req.user.masterPassword;
 
         let dek_to_encrypt;
@@ -36,6 +32,7 @@ router.post('/store-service', verify, async (req, res) => {
             service: req.body.service,
             username: req.body.username,
             password: encryptedPassword,
+            strength: req.body.strength,
         })
 
         const savedService = await service.save();
@@ -116,8 +113,10 @@ router.put('/update-service/:id', verify, async (req, res) => {
                 service: req.body.service || serviceInfo.service,
                 username: req.body.username || serviceInfo.username,
                 password: encryptedPassword || serviceInfo.password,
+                strength: req.body.strength || serviceInfo.strength,
             },
         );
+
         const service = await Service.find({ user: req.user }).select('-password');
 
         return res.status(201).json({ success: true, message: 'Service updated successfully', data: service });
@@ -223,6 +222,7 @@ router.get('/get-bookmarked-services', verify, async (req, res) => {
 
 router.delete('/permanently-delete-service/:id', verify, async (req, res) => {
     try {
+        const encryptedDEK = req.user.masterPassword;
 
         let dek_to_decrypt;
 

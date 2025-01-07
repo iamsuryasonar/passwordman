@@ -16,7 +16,7 @@ function Layout() {
             }
             <div className="max-w-[1240px] w-full m-auto relative">
                 <Navbar />
-                <div className='w-full h-full min-h-[calc(100svh-60px)] overflow-hidden p-4 flex'>
+                <div className='w-full h-full min-h-[calc(100svh-60px)] overflow-hidden p-2 sm:p-4  flex'>
                     <Outlet />
                 </div>
             </div >

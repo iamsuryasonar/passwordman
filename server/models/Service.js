@@ -17,6 +17,10 @@ const passwordSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 300,
     },
+    strength: {
+        type: Number,
+        required: true,
+    },
     password: {
         type: String,
         required: true,

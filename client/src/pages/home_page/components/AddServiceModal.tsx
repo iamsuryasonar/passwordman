@@ -5,15 +5,9 @@ import usePasswordsState from "../../../stores/usePasswordsState";
 import { generatePassword, getPasswordStrength } from "../../../utils";
 import PasswordStrengthProgress from "../../../components/PasswordStrengthProgress";
 
-
 interface Props {
     setShowAddServiceModal: (arg0: boolean) => void;
     setActiveMenu: (arg0: string) => void;
-}
-interface Strength {
-    value: number,
-    type: string,
-    color: string,
 }
 
 function AddServiceModal(props: Props) {
@@ -24,28 +18,29 @@ function AddServiceModal(props: Props) {
     const [service, setService] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [masterPassword, setMasterKey] = useState<string>('');
+    const [strength, setStrength] = useState<number | null>(null);
 
     const [username, setUsername] = useState<string>('');
     const { loading, addService } = usePasswordsState();
-    const [passwordStrength, setPasswordStrength] = useState<Strength | null>(null);
 
     const handleSubmit = async () => {
-        addService(service, username, password, masterPassword)
+        if (!strength || !username || !password || !service || !masterPassword) return;
+        addService(service, username, password, strength, masterPassword)
             .then(() => {
                 setShowAddServiceModal(false);
                 setActiveMenu('All');
             })
     };
 
-    useEffect(() => {
-        let strength = getPasswordStrength(password);
-        setPasswordStrength(strength);
-    }, [password]);
-
     const handleGeneratePassword = () => {
         let generatedPassword = generatePassword();
         setPassword(generatedPassword);
     }
+
+    useEffect(() => {
+        let strength = getPasswordStrength(password);
+        setStrength(strength);
+    }, [password])
 
     return <>
         <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90p-3 flex flex-col items-center justify-center text-white">
@@ -92,7 +87,7 @@ function AddServiceModal(props: Props) {
                                     </div>
                                 </button>
                             </div>
-                            <PasswordStrengthProgress passwordStrength={passwordStrength} />
+                            <PasswordStrengthProgress strength={strength} />
                             <button className="text-white place-self-end text-sm hover:text-green-300 hover:underline" onClick={handleGeneratePassword}>Generate password</button>
                         </div>
 

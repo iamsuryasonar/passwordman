@@ -1,32 +1,25 @@
-
-interface passwordStrength {
-    value: number,
-    type: string,
-    color: string,
+interface Props {
+    strength: number | null,
 }
 
-interface Strength {
-    passwordStrength: passwordStrength | null
-}
+function PasswordStrengthProgress(props: Props) {
 
-function PasswordStrengthProgress(props: Strength) {
-
-    const { passwordStrength } = props;
+    const { strength } = props;
 
     return (
         <>
             {
-                (passwordStrength && passwordStrength.value > 0) ? <div className="w-full h-[2px] bg-transparent flex rounded-full">
+                (strength && strength > 0) ? <div className="w-full my-1 h-[5px] bg-slate-700 flex rounded-full">
                     <div
                         style={{
-                            width: `${(passwordStrength.value / 4) * 100}%`,
-                            backgroundColor: `${passwordStrength.color}`
+                            width: `${(strength / 5) * 100}%`,
+                            backgroundColor: `${strength === 5 ? 'green' : strength >= 3 ? 'yellow' : 'red'}`
                         }}
                         className="h-full transition-all duration-500 ease-linear rounded-full">
                     </div>
                 </div>
                     :
-                    <div className="w-full h-[2px] bg-transparent flex rounded-full"></div>
+                    <div className="w-full h-[5px] bg-transparent flex rounded-full"></div>
             }
         </>
     )

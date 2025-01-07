@@ -11,12 +11,6 @@ interface Props {
     onUpdate: () => void;
 }
 
-interface Strength {
-    value: number,
-    type: string,
-    color: string,
-}
-
 function EditServiceModal(props: Props) {
 
     const { loading, updateService } = usePasswordsState();
@@ -26,24 +20,26 @@ function EditServiceModal(props: Props) {
     const [password, setPassword] = useState<string>(props.password.password || '');
     const [username, setUsername] = useState<string>(props.password.username || '');
     const [masterPassword, setMasterKey] = useState<string>('');
-    const [passwordStrength, setPasswordStrength] = useState<Strength | null>(null);
+    const [strength, setStrength] = useState<number | null>(null);
 
     const handleSubmit = async () => {
-        updateService(service, username, password, masterPassword, props.password._id)
+        if (!strength || !username || !password || !service || !masterPassword || !props?.password._id) return;
+
+        updateService(service, username, password, strength, masterPassword, props.password._id)
             .then(() => {
                 props.setShowEditModal(false);
             })
     };
 
-    useEffect(() => {
-        let strength = getPasswordStrength(password);
-        setPasswordStrength(strength);
-    }, [password]);
-
     const handleGeneratePassword = () => {
         let generatedPassword = generatePassword();
         setPassword(generatedPassword);
     }
+
+    useEffect(() => {
+        let strength = getPasswordStrength(password);
+        setStrength(strength);
+    }, [password])
 
     return <div className="fixed inset-0 z-50 backdrop-blur-sm bg-gray-900/90 text-white flex justify-center items-center ">
         <div className="p-3">
@@ -89,7 +85,7 @@ function EditServiceModal(props: Props) {
                                 </div>
                             </button>
                         </div>
-                        <PasswordStrengthProgress passwordStrength={passwordStrength} />
+                        <PasswordStrengthProgress strength={strength} />
                         <button className="text-white place-self-end text-sm hover:text-green-300 hover:underline" onClick={handleGeneratePassword}>Generate password</button>
                     </div>
 

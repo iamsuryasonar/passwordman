@@ -4,6 +4,7 @@ import usePasswordsState from "../../../stores/usePasswordsState";
 import { useState } from "react";
 import { SERVICE_BASE_URL } from "../../../constants/constants";
 import MasterKeyModal from '../../../components/MasterPasswordModal'
+import PasswordStrengthProgress from "../../../components/PasswordStrengthProgress";
 
 interface Props1 {
     activeMenu: string;
@@ -31,7 +32,6 @@ function PasswordSections(props: Props1) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    let masterPassWord = ''
     const { deletePassword, permanentlyDeletePassword, undoDeletePassword } = usePasswordsState();
 
     function deleteHandler(id: string) {
@@ -88,9 +88,9 @@ function PasswordSections(props: Props1) {
         }
     }
 
-    function onSubmitHandlerToDeletePassword() {
+    function onSubmitHandlerToDeletePassword(masterPassword: string) {
         if (passwords && selectedPassword !== null) {
-            permanentlyDeletePassword({ id: passwords[selectedPassword]._id, masterPassWord });
+            permanentlyDeletePassword({ id: passwords[selectedPassword]._id, masterPassword });
         }
     }
 
@@ -158,45 +158,33 @@ function PasswordSections(props: Props1) {
                                             deleteHandler(passwords[selectedPassword]._id);
                                         }} />
                                 </div>
-                                <button className="border border-gray-700 hover:border-white rounded-md px-4 py-1"
+                                <button className="border border-gray-700 hover:border-white rounded-md px-5 py-1 text-center"
                                     onClick={() => {
                                         setShowEditModal(true);
                                     }}>Edit</button>
                             </div>
                             <div className="p-2">
-                                <div className="flex gap-2 justify-between">
-                                    <p>{passwords[selectedPassword].service}</p>
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p>username: </p><p>{passwords[selectedPassword].username}</p>
                                 </div>
-                                <div className="flex gap-2 justify-between">
-                                    <p>{passwords[selectedPassword].username}</p>
-                                </div>
-                                <div className="flex flex-row items-center gap-4">
-
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p>password:</p>
                                     {
                                         (decryptedPassword !== null && service._id === decryptedPassword._id) ?
-                                            <p className="">{decryptedPassword.password}</p>
-                                            :
-                                            <p className="font-semibold text-lg text-gray-500">•••••••••••</p>
-                                    }
-                                    {
-                                        (decryptedPassword !== null && service._id === decryptedPassword._id) ?
-                                            <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
+                                            <button className=""
                                                 onClick={() => {
                                                     copyToClipboard(decryptedPassword.password);
-                                                }}
-                                            >
-                                                Copy
-                                            </button>
+                                                }}>{decryptedPassword.password}</button>
                                             :
-                                            <button className="border-2 border-gray-700 hover:border-white px-2 py-1 rounded-md"
+                                            <button className="font-semibold text-xl text-slate-600"
                                                 onClick={() => {
                                                     setShowMasterKeyModalToShowPassword(true);
-                                                }}
-                                            >
-                                                {isLoading ? "Decrypting" : "Decrypt"}
-                                            </button>
+                                                }}>••••••••</button>
                                     }
-
+                                </div>
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p>strength:</p>
+                                    <PasswordStrengthProgress strength={passwords[selectedPassword].strength} />
                                 </div>
                             </div>
                         </div>

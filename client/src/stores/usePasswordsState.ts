@@ -25,10 +25,10 @@ interface PasswordsState {
     deletedPasswords: Service[] | null;
     loading: boolean;
     passMessage: string | null;
-    addService: (arg0: string, arg1: string, arg3: string, arg4: string) => Promise<void>;
+    addService: (arg0: string, arg1: string, arg3: string, arg4: number, arg5: string) => Promise<void>;
     getServices: () => Promise<void>;
     updateBookmarkStatus: (arg0: string, arg1: string) => Promise<void>;
-    updateService: (arg0: string, arg1: string, arg3: string, arg4: string, arg5: string) => Promise<void>;
+    updateService: (arg0: string, arg1: string, arg3: string, arg4: number, arg5: string, arg6: string) => Promise<void>;
     deletePassword: (arg0: string) => Promise<void>;
     undoDeletePassword: (arg0: string) => Promise<void>;
     permanentlyDeletePassword: (arg0: any) => Promise<void>;
@@ -48,7 +48,7 @@ const usePasswordsState = create<PasswordsState>(
             loading: false,
             passMessage: null,
 
-            addService: async (service: string, username: string, password: string, masterPassword: string) => {
+            addService: async (service: string, username: string, password: string, strength: number, masterPassword: string) => {
                 try {
                     set({ loading: true, passMessage: null });
                     const token = JSON.parse(localStorage.getItem('PASSWORDvault-auth-storage')!).state.user.token
@@ -59,7 +59,7 @@ const usePasswordsState = create<PasswordsState>(
                             'Authorization': `Bearer ${token}`
                         },
 
-                        body: JSON.stringify({ service, username, password, masterPassword }),
+                        body: JSON.stringify({ service, username, password, strength, masterPassword }),
                     });
 
                     if (!response.ok) {
@@ -146,7 +146,7 @@ const usePasswordsState = create<PasswordsState>(
                 }
             },
 
-            updateService: async (service: string, username: string, password: string, masterPassword: string, id: string) => {
+            updateService: async (service: string, username: string, password: string, strength: number, masterPassword: string, id: string) => {
                 set({ loading: true, passMessage: null });
 
                 try {
@@ -158,7 +158,7 @@ const usePasswordsState = create<PasswordsState>(
                             'Authorization': `Bearer ${token}`
                         },
 
-                        body: JSON.stringify({ service, username, password, masterPassword }),
+                        body: JSON.stringify({ service, username, password, strength, masterPassword }),
                     });
 
                     if (!response.ok) {

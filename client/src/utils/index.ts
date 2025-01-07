@@ -40,24 +40,14 @@ export const getPasswordStrength = (password: string = '') => {
     if (hasNumber) strength++;
     if (hasSymbols) strength++;
 
-    if (strength === 4 && fulfillsLengthCriteria) {
-        return {
-            value: strength,
-            type: 'Strong',
-            color: 'green'
-        }
-    } else if (strength >= 3 && fulfillsLengthCriteria) {
-        return {
-            value: strength,
-            type: 'Medium',
-            color: 'yellow'
-        }
+    if (strength >= 4) {
+        if (fulfillsLengthCriteria) strength++;
+        return strength;
+    } else if (strength >= 3) {
+        if (fulfillsLengthCriteria) strength++;
+        return strength;
     } else {
-        return {
-            value: strength,
-            type: 'Weak',
-            color: 'red'
-        }
+        return strength;
     }
 }
 

@@ -59,35 +59,37 @@ function HomePage() {
     }
 
     return <div className="w-full flex relative gap-2 text-white">
-        <aside className="py-4 fixed top-[60px] bottom-0 w-[60px] sm:w-[200px] min-h-screen px-3 flex flex-col items-center sm:items-stretch gap-2">
+        <aside className="py-2 sm:py-4 fixed top-[60px] bottom-0 w-[40px] sm:w-[200px] min-h-screen pr-2 sm:pr-3 flex flex-col items-center sm:items-stretch gap-2">
             <SideBarMenuItem title={'All'} icon={faVault} color={'lightgreen'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
             <SideBarMenuItem title={'Bookmarked'} icon={faBookmark} color={'yellow'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
             <SideBarMenuItem title={'Trash'} icon={faTrash} color={'red'} activeMenu={activeMenu} setActiveMenu={activeMenuHandler} />
         </aside>
 
-        <div className="relative sm:ml-[210px] ml-[60px] mr-3 mb-3 w-full p-2 rounded-md flex flex-col border border-1 border-gray-700">
-            <div className="p-2 mb-4 flex gap-2 justify-between">
-                <SearchSection searchText={searchText} setSearchText={setSearchText} setShowAddServiceModal={setShowAddServiceModal} />
+        <div className="relative sm:ml-[200px] ml-[40px] w-full p-2 rounded-md flex flex-col items-center border border-1 border-gray-700">
+            <div className="lg:max-w-2xl w-full">
+                <div className="p-2 mb-2 flex gap-2 justify-between">
+                    <SearchSection searchText={searchText} setSearchText={setSearchText} setShowAddServiceModal={setShowAddServiceModal} />
+                </div>
+
+                <PasswordSections
+                    activeMenu={activeMenu}
+                    passwords={searchText ? searchedActivePasswords : allActivePasswords}
+                    selectedPassword={selectedPassword}
+                    setSelectedPassword={setSelectedPassword}
+                    bookmarkHandler={bookmarkHandler}
+                    setShowEditModal={setShowEditModal}
+                />
+
+                {
+                    showAddServiceModal &&
+                    <AddServiceModal setShowAddServiceModal={setShowAddServiceModal} setActiveMenu={setActiveMenu} />
+                }
+
+                {
+                    showEditModal && allPasswords && selectedPassword !== null &&
+                    <EditServiceModal password={allPasswords[selectedPassword]} setShowEditModal={setShowEditModal} onUpdate={() => { }} />
+                }
             </div>
-
-            <PasswordSections
-                activeMenu={activeMenu}
-                passwords={searchText ? searchedActivePasswords : allActivePasswords}
-                selectedPassword={selectedPassword}
-                setSelectedPassword={setSelectedPassword}
-                bookmarkHandler={bookmarkHandler}
-                setShowEditModal={setShowEditModal}
-            />
-
-            {
-                showAddServiceModal &&
-                <AddServiceModal setShowAddServiceModal={setShowAddServiceModal} setActiveMenu={setActiveMenu} />
-            }
-
-            {
-                showEditModal && allPasswords && selectedPassword !== null &&
-                <EditServiceModal password={allPasswords[selectedPassword]} setShowEditModal={setShowEditModal} onUpdate={() => { }} />
-            }
 
         </div >
     </div >
