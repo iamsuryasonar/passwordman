@@ -5,12 +5,13 @@ import { useState } from "react";
 import { SERVICE_BASE_URL } from "../../../constants/constants";
 import MasterKeyModal from '../../../components/MasterPasswordModal'
 import PasswordStrengthProgress from "../../../components/PasswordStrengthProgress";
+import { type Service } from '../../../lib/index';
 
 interface Props1 {
     activeMenu: string;
-    passwords: any;
+    passwords: Service[];
     selectedPassword: number | null;
-    bookmarkHandler: (arg0: boolean, arg1: 'string') => void;
+    bookmarkHandler: (arg0: boolean, arg1: string) => void;
     setSelectedPassword: (arg0: number | null) => void;
     setShowEditModal: (arg0: boolean) => void;
 }

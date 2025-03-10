@@ -1,6 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
 import { SERVICE_BASE_URL } from "../constants/constants";
+import { type Service } from '../lib/index';
 
 function filterPasswordsToArray(passwords: any) {
     const allPasswords = passwords.filter((el: any) => el.deleted !== true);
@@ -9,15 +10,6 @@ function filterPasswordsToArray(passwords: any) {
     return { allPasswords, deletedPasswords, bookmarkedPasswords }
 }
 
-interface Service {
-    _id: string;
-    username: string;
-    service: string;
-    bookmarked: boolean;
-    deleted: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
 
 interface PasswordsState {
     allPasswords: Service[] | null;

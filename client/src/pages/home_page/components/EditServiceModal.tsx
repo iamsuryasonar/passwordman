@@ -4,9 +4,14 @@ import { useEffect, useState } from "react";
 import usePasswordsState from '../../../stores/usePasswordsState';
 import { generatePassword, getPasswordStrength } from "../../../utils";
 import PasswordStrengthProgress from "../../../components/PasswordStrengthProgress";
+import { type Service } from '../../../lib/index';
+
+interface Strength {
+    strength: number;
+}
 
 interface Props {
-    password: any;
+    password: Service & Strength;
     setShowEditModal: (arg0: boolean) => void;
     onUpdate: () => void;
 }
@@ -20,11 +25,10 @@ function EditServiceModal(props: Props) {
     const [password, setPassword] = useState<string>(props.password.password || '');
     const [username, setUsername] = useState<string>(props.password.username || '');
     const [masterPassword, setMasterKey] = useState<string>('');
-    const [strength, setStrength] = useState<number | null>(null);
+    const [strength, setStrength] = useState<number | null>(props.password.strength || null);
 
     const handleSubmit = async () => {
-        if (!strength || !username || !password || !service || !masterPassword || !props?.password._id) return;
-
+        if (!strength || !username || !service || !masterPassword || !props?.password._id) return;
         updateService(service, username, password, strength, masterPassword, props.password._id)
             .then(() => {
                 props.setShowEditModal(false);
@@ -37,6 +41,7 @@ function EditServiceModal(props: Props) {
     }
 
     useEffect(() => {
+        if (!password) return;
         let strength = getPasswordStrength(password);
         setStrength(strength);
     }, [password])

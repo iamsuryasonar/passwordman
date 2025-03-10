@@ -4,8 +4,6 @@ import useAuthState from "../stores/useAuthState";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
-
 function Navbar() {
     const { user, logout, isLoggedIn } = useAuthState();
     const [showMenu, setShowMenu] = useState<boolean>(false);
